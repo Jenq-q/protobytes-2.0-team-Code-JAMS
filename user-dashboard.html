@@ -147,9 +147,12 @@
                     <span>Dashboard</span>
                 </a>
                 <a href="#" class="sidebar-item" data-section="new-complaint" onclick="showSection('new-complaint')">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <!-- <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 4v16m8-8H4"/>
-                    </svg>
+                    </svg> -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 4v16m8-8H4"/>
+</svg>
                     <span>New Complaint</span>
                 </a>
                 <a href="#" class="sidebar-item" data-section="my-complaints" onclick="showSection('my-complaints')">
@@ -193,12 +196,6 @@
             <section id="dashboard-section" class="content-section active">
                 <div class="section-header-inline">
                     <h1>Dashboard Overview</h1>
-                    <button class="btn-primary" onclick="showSection('new-complaint')">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 4v16m8-8H4"/>
-                        </svg>
-                        Lodge New Complaint
-                    </button>
                 </div>
 
                 <!-- Quick Stats -->
@@ -301,9 +298,9 @@
                 <div class="quick-actions-grid">
                     <div class="action-card" onclick="showSection('new-complaint')">
                         <div class="action-icon">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 4v16m8-8H4"/>
-                            </svg>
+                           <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 4v16m8-8H4"/>
+</svg>
                         </div>
                         <h3>Lodge Complaint</h3>
                         <p>Submit a new grievance or issue</p>
@@ -352,6 +349,15 @@
                         <div class="form-section">
                             <h3>Complaint Category</h3>
                             <div class="category-grid">
+                                <label class="category-option">
+                                    <input type="radio" name="category" value="electricity" required>
+                                    <div class="category-card">
+                                        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                        </svg>
+                                        <span>Corruption</span>
+                                    </div>
+                                </label>
                                 <label class="category-option">
                                     <input type="radio" name="category" value="electricity" required>
                                     <div class="category-card">

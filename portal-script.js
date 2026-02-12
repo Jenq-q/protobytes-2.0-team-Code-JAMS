@@ -20,6 +20,8 @@ function showLoginModal() {
     if (modal) {
         modal.classList.add('active');
         modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
     }
 }
 
@@ -29,6 +31,7 @@ function closeLoginModal() {
         modal.classList.remove('active');
         setTimeout(() => {
             modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
         }, 200);
     }
 }
@@ -38,6 +41,7 @@ function showRegisterModal() {
     if (modal) {
         modal.classList.add('active');
         modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     }
 }
 
@@ -47,6 +51,7 @@ function closeRegisterModal() {
         modal.classList.remove('active');
         setTimeout(() => {
             modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
         }, 200);
     }
 }
@@ -77,33 +82,50 @@ window.addEventListener('click', (e) => {
         closeRegisterModal();
     }
 });
-
+document.addEventListener('DOMContentLoaded', () => {
+    // Handle role selection in modals
+    document.querySelectorAll('.role-option').forEach(option => {
+        option.addEventListener('click', function() {
+            this.closest('.role-selector').querySelectorAll('.role-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            this.classList.add('selected');
+            this.querySelector('input[type="radio"]').checked = true;
+        });
+    });
+    
+    // Update date display
+    updateDateDisplay();
+    
+    console.log('Nepal Citizen Service Portal loaded successfully');
+});
 // =====================================================
 // FORM HANDLERS
 // =====================================================
 function handleLogin(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
+    const role = formData.get('loginRole');
     const email = formData.get('loginEmail');
-    const password = formData.get('loginPassword');
     
-    // Simulate login (replace with actual API call)
-    console.log('Login attempt:', email);
+    console.log('Login attempt:', { role, email });
     
-    // Show loading state
     const submitBtn = event.target.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = 'Signing in...';
     submitBtn.disabled = true;
     
     setTimeout(() => {
-        // Simulate successful login
-        showNotification('Login successful! Redirecting to dashboard...', 'success');
-        
-        setTimeout(() => {
+        closeLoginModal();
+        // Redirect based on role
+        if (role === 'citizen') {
             window.location.href = 'user-dashboard.html';
-        }, 1000);
-    }, 1500);
+        } else {
+            window.location.href = 'admin-dashboard.html';
+        }
+    }, 1000);
+    
+    return false;
 }
 
 function handleRegister(event) {

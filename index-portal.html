@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>नागरिक सेवा पोर्टल | Citizen Service Portal</title>
+    <title>नागरिक सेवा पोर्टल | Citizen Service Portal - Government of Nepal</title>
     <link rel="stylesheet" href="portal-style.css">
 </head>
 <body>
@@ -11,10 +11,12 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <div class="logo">
-                    <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                        <polyline points="9 22 9 12 15 12 15 22"/>
+                <div class="nepal-emblem">
+                    <!-- Nepal Government Coat of Arms SVG -->
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="45" fill="#DC143C" stroke="#003893" stroke-width="3"/>
+                        <path d="M50 20 L55 35 L70 35 L58 45 L63 60 L50 50 L37 60 L42 45 L30 35 L45 35 Z" fill="#FFFFFF"/>
+                        <circle cx="50" cy="50" r="8" fill="#003893"/>
                     </svg>
                 </div>
                 <div class="brand-text">
@@ -23,15 +25,22 @@
                 </div>
             </div>
             
+            <div class="nav-links">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#explore" class="nav-link">Explore Complaints</a>
+                <a href="#features" class="nav-link">How It Works</a>
+                <a href="#government" class="nav-link">Government System</a>
+            </div>
+            
             <div class="nav-actions">
-                <button class="nav-btn" onclick="showLoginModal()">Sign In</button>
+                <button class="nav-btn" onclick="showLoginModal()">Login</button>
                 <button class="nav-btn-primary" onclick="showRegisterModal()">Register</button>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="home">
         <div class="hero-background">
             <div class="hero-overlay"></div>
             <div class="hero-pattern"></div>
@@ -50,14 +59,15 @@
             </p>
             <div class="hero-cta">
                 <button class="cta-primary" onclick="showRegisterModal()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 4v16m8-8H4"/>
                     </svg>
                     Register Complaint
                 </button>
-                <button class="cta-secondary" onclick="scrollToFeatures()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                <button class="cta-secondary" onclick="scrollToSection('features')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4m0-4h.01"/>
                     </svg>
                     Learn More
                 </button>
@@ -97,13 +107,178 @@
         </div>
     </section>
 
+    <!-- Explore Complaints Section -->
+    <section class="explore-section" id="explore">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Explore Public Complaints</h2>
+                <div class="header-line"></div>
+                <p>Browse trending complaints, support critical issues, and stay informed about public concerns</p>
+            </div>
+
+            <div class="explore-controls">
+                <div class="explore-tabs">
+                    <button class="explore-tab active" onclick="filterComplaints('all')">All</button>
+                    <button class="explore-tab" onclick="filterComplaints('critical')">Critical</button>
+                    <button class="explore-tab" onclick="filterComplaints('trending')">Trending</button>
+                    <button class="explore-tab" onclick="filterComplaints('recent')">Recent</button>
+                </div>
+                <select class="explore-sort" onchange="sortComplaints(this.value)">
+                    <option value="priority">Sort by Priority</option>
+                    <option value="upvotes">Most Upvoted</option>
+                    <option value="recent">Most Recent</option>
+                    <option value="category">By Category</option>
+                </select>
+            </div>
+
+            <div class="complaint-grid" id="complaintGrid">
+                <!-- High Priority / Critical Complaints -->
+                <div class="complaint-card high-priority" data-category="corruption" data-priority="critical">
+                    <div class="urgent-indicator"></div>
+                    <div class="complaint-header">
+                        <span class="complaint-id">CPL-2025-0001</span>
+                        <span class="priority-badge critical">Critical</span>
+                    </div>
+                    <h3 class="complaint-title">Alleged Corruption in Public Procurement</h3>
+                    <p class="complaint-description">
+                        Major irregularities discovered in government contract allocation process. Multiple departments involved, requires immediate CIAA investigation and intervention from higher authorities.
+                    </p>
+                    <div class="complaint-meta">
+                        <div class="complaint-category">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                            </svg>
+                            Corruption & Bribery
+                        </div>
+                        <span class="complaint-date">2 hours ago</span>
+                    </div>
+                    <div class="complaint-actions">
+                        <button class="upvote-btn" onclick="upvoteComplaint(this, 1)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/>
+                            </svg>
+                            <span class="upvote-count">1,247</span>
+                        </button>
+                        <button class="report-btn" onclick="reportComplaint(1)" title="Report inappropriate content">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- High Priority Complaint -->
+                <div class="complaint-card" data-category="infrastructure" data-priority="high">
+                    <div class="complaint-header">
+                        <span class="complaint-id">CPL-2025-0002</span>
+                        <span class="priority-badge high">High</span>
+                    </div>
+                    <h3 class="complaint-title">Bridge Collapse Risk in Sindhupalchok</h3>
+                    <p class="complaint-description">
+                        Critical bridge showing severe structural damage. Immediate safety hazard affecting 15,000+ residents. Needs urgent inspection and repair to prevent potential disaster.
+                    </p>
+                    <div class="complaint-meta">
+                        <div class="complaint-category">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            </svg>
+                            Infrastructure
+                        </div>
+                        <span class="complaint-date">5 hours ago</span>
+                    </div>
+                    <div class="complaint-actions">
+                        <button class="upvote-btn" onclick="upvoteComplaint(this, 2)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/>
+                            </svg>
+                            <span class="upvote-count">856</span>
+                        </button>
+                        <button class="report-btn" onclick="reportComplaint(2)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Medium Priority -->
+                <div class="complaint-card" data-category="utilities" data-priority="medium">
+                    <div class="complaint-header">
+                        <span class="complaint-id">CPL-2025-0003</span>
+                        <span class="priority-badge medium">Medium</span>
+                    </div>
+                    <h3 class="complaint-title">Frequent Power Outages in Kathmandu</h3>
+                    <p class="complaint-description">
+                        Repeated electricity disruptions affecting multiple wards in Kathmandu Metropolitan City. Load shedding patterns inconsistent with announced schedule.
+                    </p>
+                    <div class="complaint-meta">
+                        <div class="complaint-category">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                            Utilities
+                        </div>
+                        <span class="complaint-date">1 day ago</span>
+                    </div>
+                    <div class="complaint-actions">
+                        <button class="upvote-btn" onclick="upvoteComplaint(this, 3)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/>
+                            </svg>
+                            <span class="upvote-count">432</span>
+                        </button>
+                        <button class="report-btn" onclick="reportComplaint(3)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Normal Priority -->
+                <div class="complaint-card" data-category="environment" data-priority="normal">
+                    <div class="complaint-header">
+                        <span class="complaint-id">CPL-2025-0004</span>
+                        <span class="priority-badge normal">Normal</span>
+                    </div>
+                    <h3 class="complaint-title">Waste Management Issues in Lalitpur</h3>
+                    <p class="complaint-description">
+                        Irregular garbage collection schedule causing accumulation of waste in residential areas. Request for better coordination with municipal services.
+                    </p>
+                    <div class="complaint-meta">
+                        <div class="complaint-category">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Environment
+                        </div>
+                        <span class="complaint-date">2 days ago</span>
+                    </div>
+                    <div class="complaint-actions">
+                        <button class="upvote-btn" onclick="upvoteComplaint(this, 4)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/>
+                            </svg>
+                            <span class="upvote-count">187</span>
+                        </button>
+                        <button class="report-btn" onclick="reportComplaint(4)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Features Section -->
     <section class="features-section" id="features">
         <div class="section-container">
             <div class="section-header">
                 <h2>How It Works</h2>
                 <div class="header-line"></div>
-                <p>Simple, transparent, and effective grievance redressal mechanism</p>
+                <p>Simple, transparent, and effective grievance redressal mechanism powered by AI</p>
             </div>
 
             <div class="features-grid">
@@ -116,8 +291,8 @@
                             <polyline points="17 11 19 13 23 9"/>
                         </svg>
                     </div>
-                    <h3>Register Account</h3>
-                    <p>Create your secure account with citizenship details and contact information for verified access to services.</p>
+                    <h3>Register with 2FA</h3>
+                    <p>Create your secure account with citizenship details, phone verification via OTP, and complete address including house number for verified access.</p>
                 </div>
 
                 <div class="feature-card">
@@ -128,7 +303,7 @@
                         </svg>
                     </div>
                     <h3>Lodge Complaint</h3>
-                    <p>Submit detailed complaints through our smart system that automatically categorizes and routes to appropriate authorities.</p>
+                    <p>Submit detailed complaints with categories including corruption & bribery. Our smart system automatically categorizes and routes to appropriate authorities.</p>
                 </div>
 
                 <div class="feature-card">
@@ -139,7 +314,7 @@
                         </svg>
                     </div>
                     <h3>AI Classification</h3>
-                    <p>Advanced AI analyzes your complaint and intelligently routes it to Federal, Provincial, or Local government bodies.</p>
+                    <p>Advanced AI analyzes your complaint and intelligently routes it to Federal, Provincial, or Local government bodies based on jurisdiction and severity.</p>
                 </div>
 
                 <div class="feature-card">
@@ -149,8 +324,8 @@
                             <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                         </svg>
                     </div>
-                    <h3>Real-time Tracking</h3>
-                    <p>Track your complaint status in real-time with notifications at every stage from registration to resolution.</p>
+                    <h3>Real-time Updates</h3>
+                    <p>Receive instant notifications as your complaint moves through the system. Track progress with detailed timeline and status updates at every step.</p>
                 </div>
 
                 <div class="feature-card">
@@ -160,8 +335,8 @@
                             <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
                     </div>
-                    <h3>Department Collaboration</h3>
-                    <p>Multiple departments can collaborate on complex issues with coordinated updates and action plans.</p>
+                    <h3>Department Action</h3>
+                    <p>Relevant department officials review and take action. For critical issues, cases may be escalated to PM Office, CIAA, or other high authorities.</p>
                 </div>
 
                 <div class="feature-card">
@@ -172,66 +347,68 @@
                         </svg>
                     </div>
                     <h3>Resolution & Feedback</h3>
-                    <p>Receive resolution updates and provide feedback on service quality to help us improve continuously.</p>
+                    <p>Once resolved, provide feedback on your experience. Your input helps improve the system and holds authorities accountable for quality service.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Government Levels Section -->
-    <section class="govt-levels-section">
+    <!-- Government System Section -->
+    <section class="government-section" id="government">
         <div class="section-container">
             <div class="section-header">
-                <h2>Three-Tier Government System</h2>
+                <h2>Nepal's Three-Tier Government System</h2>
                 <div class="header-line"></div>
-                <p>Connecting you with the right level of government</p>
+                <p>Understanding how your complaints reach the right authorities</p>
             </div>
 
-            <div class="govt-cards">
-                <div class="govt-card federal">
-                    <div class="govt-icon">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            <div class="government-grid">
+                <div class="government-card" onclick="showGovModal('federal')">
+                    <div class="gov-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4z"/>
                         </svg>
                     </div>
                     <h3>Federal Government</h3>
-                    <ul>
-                        <li>National policies and laws</li>
-                        <li>Members of Parliament (MPs)</li>
-                        <li>Central ministries</li>
-                        <li>National-level issues</li>
-                    </ul>
+                    <p>National-level governance including defense, foreign affairs, major infrastructure, and cross-provincial matters. Handles issues of national importance and high-priority cases.</p>
+                    <button class="learn-more-btn">
+                        Learn More
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        </svg>
+                    </button>
                 </div>
 
-                <div class="govt-card provincial">
-                    <div class="govt-icon">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                <div class="government-card" onclick="showGovModal('provincial')">
+                    <div class="gov-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                         </svg>
                     </div>
                     <h3>Provincial Government</h3>
-                    <ul>
-                        <li>Provincial policies</li>
-                        <li>Members of Provincial Assembly</li>
-                        <li>Provincial ministries</li>
-                        <li>Regional development</li>
-                    </ul>
+                    <p>Seven provinces managing regional development, provincial roads, agriculture, tourism, and provincial public services across their jurisdictions.</p>
+                    <button class="learn-more-btn">
+                        Learn More
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        </svg>
+                    </button>
                 </div>
 
-                <div class="govt-card local">
-                    <div class="govt-icon">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                            <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <div class="government-card" onclick="showGovModal('local')">
+                    <div class="gov-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                         </svg>
                     </div>
                     <h3>Local Government</h3>
-                    <ul>
-                        <li>Ward offices</li>
-                        <li>Municipality/Rural Municipality</li>
-                        <li>Local infrastructure</li>
-                        <li>Community services</li>
-                    </ul>
+                    <p>753 local units (Municipalities & Rural Municipalities) handling local infrastructure, sanitation, basic services, and community-level governance.</p>
+                    <button class="learn-more-btn">
+                        Learn More
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
@@ -241,7 +418,7 @@
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Sign In to Your Account</h2>
+                <h2>Login to Portal</h2>
                 <button class="close-btn" onclick="closeLoginModal()">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M6 18L18 6M6 6l12 12"/>
@@ -249,24 +426,49 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="loginForm" onsubmit="handleLogin(event)">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-section">
+                        <h3>Select Your Role</h3>
+                        <div class="role-selector">
+                            <label class="role-option selected">
+                                <input type="radio" name="loginRole" value="citizen" checked>
+                                <div class="role-icon">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                </div>
+                                <div class="role-title">Citizen/User</div>
+                                <div class="role-description">Lodge and track complaints</div>
+                            </label>
+                            <label class="role-option">
+                                <input type="radio" name="loginRole" value="agency">
+                                <div class="role-icon">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                    </svg>
+                                </div>
+                                <div class="role-title">Government Agency</div>
+                                <div class="role-description">Manage and resolve complaints</div>
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="form-group">
-                        <label for="loginEmail">Email Address or Citizenship Number</label>
+                        <label for="loginEmail">Email Address or Citizenship Number *</label>
                         <input type="text" id="loginEmail" name="loginEmail" required placeholder="Enter your email or citizenship number">
                     </div>
                     <div class="form-group">
-                        <label for="loginPassword">Password</label>
+                        <label for="loginPassword">Password *</label>
                         <input type="password" id="loginPassword" name="loginPassword" required placeholder="Enter your password">
                     </div>
-                    <div class="form-actions">
+                    <div class="form-group">
                         <label class="checkbox-label">
                             <input type="checkbox" name="rememberMe">
                             <span>Remember me</span>
                         </label>
-                        <a href="#" class="text-link">Forgot password?</a>
                     </div>
-                    <button type="submit" class="btn-primary full-width">Sign In</button>
-                    <div class="form-footer">
+                    <button type="submit" class="btn-primary full-width">Login</button>
+                    <div class="form-footer" style="margin-top: 1rem; text-align: center;">
                         Don't have an account? <a href="#" onclick="switchToRegister()">Register here</a>
                     </div>
                 </form>
@@ -276,9 +478,9 @@
 
     <!-- Register Modal -->
     <div id="registerModal" class="modal">
-        <div class="modal-content modal-large">
+        <div class="modal-content modal-content-large">
             <div class="modal-header">
-                <h2>Register New Account</h2>
+                <h2>Create New Account</h2>
                 <button class="close-btn" onclick="closeRegisterModal()">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M6 18L18 6M6 6l12 12"/>
@@ -286,36 +488,50 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="registerForm" onsubmit="handleRegister(event)">
+                <form onsubmit="handleRegistration(event)">
                     <div class="form-section">
                         <h3>Personal Information</h3>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="fullName">Full Name *</label>
-                                <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                                <label for="fullName">Full Name (Nepali) *</label>
+                                <input type="text" id="fullName" name="fullName" required placeholder="पूरा नाम">
                             </div>
                             <div class="form-group">
-                                <label for="phone">Phone Number *</label>
-                                <input type="tel" id="phone" name="phone" required placeholder="98XXXXXXXX">
+                                <label for="fullNameEng">Full Name (English) *</label>
+                                <input type="text" id="fullNameEng" name="fullNameEng" required placeholder="Full Name">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="email">Email Address *</label>
-                                <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                                <label for="citizenship">Citizenship Number *</label>
+                                <input type="text" id="citizenship" name="citizenship" required placeholder="XX-XX-XX-XXXXX">
                             </div>
                             <div class="form-group">
-                                <label for="citizenship">Citizenship Number (नागरिकता नम्बर) *</label>
-                                <input type="text" id="citizenship" name="citizenship" required placeholder="XX-XX-XX-XXXXX">
+                                <label for="dateOfBirth">Date of Birth *</label>
+                                <input type="date" id="dateOfBirth" name="dateOfBirth" required>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-section">
-                        <h3>Address Information</h3>
+                        <h3>Contact Information</h3>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="permanentProvince">Permanent Province *</label>
+                                <label for="phoneNumber">Mobile Number (for OTP verification) *</label>
+                                <input type="tel" id="phoneNumber" name="phoneNumber" required placeholder="+977-98XXXXXXXX" pattern="[0-9+\-]{10,15}">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Permanent Address</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="permanentProvince">Province *</label>
                                 <select id="permanentProvince" name="permanentProvince" required>
                                     <option value="">Select Province</option>
                                     <option value="koshi">Koshi Province</option>
@@ -328,7 +544,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="permanentDistrict">Permanent District *</label>
+                                <label for="permanentDistrict">District *</label>
                                 <input type="text" id="permanentDistrict" name="permanentDistrict" required placeholder="Enter district">
                             </div>
                         </div>
@@ -342,53 +558,10 @@
                                 <input type="number" id="permanentWard" name="permanentWard" required min="1" placeholder="Enter ward number">
                             </div>
                         </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3>Temporary Address (Optional)</h3>
-                        <div class="form-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="sameAsPermament" onchange="copyPermanentAddress()">
-                                <span>Same as permanent address</span>
-                            </label>
-                        </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="temporaryProvince">Temporary Province</label>
-                                <select id="temporaryProvince" name="temporaryProvince">
-                                    <option value="">Select Province</option>
-                                    <option value="koshi">Koshi Province</option>
-                                    <option value="madhesh">Madhesh Province</option>
-                                    <option value="bagmati">Bagmati Province</option>
-                                    <option value="gandaki">Gandaki Province</option>
-                                    <option value="lumbini">Lumbini Province</option>
-                                    <option value="karnali">Karnali Province</option>
-                                    <option value="sudurpaschim">Sudurpashchim Province</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="temporaryDistrict">Temporary District</label>
-                                <input type="text" id="temporaryDistrict" name="temporaryDistrict" placeholder="Enter district">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="temporaryMunicipality">Municipality/Rural Municipality</label>
-                                <input type="text" id="temporaryMunicipality" name="temporaryMunicipality" placeholder="Enter municipality">
-                            </div>
-                            <div class="form-group">
-                                <label for="temporaryWard">Ward Number</label>
-                                <input type="number" id="temporaryWard" name="temporaryWard" min="1" placeholder="Enter ward number">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3>Additional Information (Optional)</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="nidCard">National ID Card Number</label>
-                                <input type="text" id="nidCard" name="nidCard" placeholder="Enter NID number if available">
+                                <label for="houseNumber">House Number *</label>
+                                <input type="text" id="houseNumber" name="houseNumber" required placeholder="Enter house number">
                             </div>
                         </div>
                     </div>
@@ -398,7 +571,7 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="password">Password *</label>
-                                <input type="password" id="password" name="password" required placeholder="Create a strong password">
+                                <input type="password" id="password" name="password" required placeholder="Create a strong password" minlength="8">
                             </div>
                             <div class="form-group">
                                 <label for="confirmPassword">Confirm Password *</label>
@@ -414,11 +587,58 @@
                         </label>
                     </div>
 
-                    <button type="submit" class="btn-primary full-width">Create Account</button>
-                    <div class="form-footer">
-                        Already have an account? <a href="#" onclick="switchToLogin()">Sign in here</a>
+                    <button type="submit" class="btn-primary full-width">Verify Phone & Create Account</button>
+                    <div class="form-footer" style="margin-top: 1rem; text-align: center;">
+                        Already have an account? <a href="#" onclick="switchToLogin()">Login here</a>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTP Verification Modal -->
+    <div id="otpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Verify Your Phone Number</h2>
+                <button class="close-btn" onclick="closeOtpModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="otp-section">
+                    <h4>Enter 6-digit OTP</h4>
+                    <p style="color: var(--neutral-600); margin-bottom: 1.5rem;">We've sent a verification code to <strong id="otpPhoneDisplay"></strong></p>
+                    <div class="otp-inputs">
+                        <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" onkeyup="moveToNext(this, 0)">
+                        <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" onkeyup="moveToNext(this, 1)">
+                        <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" onkeyup="moveToNext(this, 2)">
+                        <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" onkeyup="moveToNext(this, 3)">
+                        <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" onkeyup="moveToNext(this, 4)">
+                        <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" onkeyup="moveToNext(this, 5)">
+                    </div>
+                    <button class="btn-primary full-width" onclick="verifyOTP()">Verify & Complete Registration</button>
+                    <a href="#" class="resend-otp" onclick="resendOTP(event)">Didn't receive code? Resend OTP</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Government Info Modal -->
+    <div id="govInfoModal" class="modal">
+        <div class="modal-content modal-content-large">
+            <div class="modal-header">
+                <h2 id="govModalTitle">Government Level Information</h2>
+                <button class="close-btn" onclick="closeGovModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="govModalContent">
+                <!-- Content will be dynamically loaded -->
             </div>
         </div>
     </div>
@@ -427,39 +647,75 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
-                <h3>नागरिक सेवा पोर्टल</h3>
-                <p>Empowering citizens through transparent and efficient grievance redressal across all levels of Nepal Government.</p>
+                <div class="footer-logo">
+                    <div class="nepal-emblem" style="width: 50px; height: 50px;">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="45" fill="#DC143C" stroke="#003893" stroke-width="3"/>
+                            <path d="M50 20 L55 35 L70 35 L58 45 L63 60 L50 50 L37 60 L42 45 L30 35 L45 35 Z" fill="#FFFFFF"/>
+                            <circle cx="50" cy="50" r="8" fill="#003893"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>नागरिक सेवा पोर्टल</h3>
+                        <p style="font-size: 0.875rem; color: var(--neutral-400); margin-top: 0.25rem;">Citizen Service Portal</p>
+                    </div>
+                </div>
+                <p>Empowering citizens through transparent and efficient grievance redressal across all levels of Nepal Government. Your voice matters, and we ensure it reaches the right authorities.</p>
+                <div class="footer-social">
+                    <a href="#" class="social-link" aria-label="Facebook">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Twitter">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-link" aria-label="YouTube">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.33z"/>
+                            <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+                        </svg>
+                    </a>
+                </div>
             </div>
             <div class="footer-section">
                 <h4>Quick Links</h4>
                 <ul>
-                    <li><a href="#">About Portal</a></li>
-                    <li><a href="#">How It Works</a></li>
-                    <li><a href="#">FAQs</a></li>
-                    <li><a href="#">Contact Support</a></li>
+                    <li><a href="#about">About Portal</a></li>
+                    <li><a href="#features">How It Works</a></li>
+                    <li><a href="#explore">Browse Complaints</a></li>
+                    <li><a href="#government">Government System</a></li>
+                    <li><a href="#faq">FAQs</a></li>
+                    <li><a href="#contact">Contact Support</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>Government Links</h4>
+                <h4>Government Bodies</h4>
                 <ul>
                     <li><a href="#">Office of Prime Minister</a></li>
                     <li><a href="#">Ministry of Home Affairs</a></li>
+                    <li><a href="#">CIAA - Anti-Corruption</a></li>
                     <li><a href="#">Provincial Governments</a></li>
                     <li><a href="#">Local Governments</a></li>
+                    <li><a href="#">Nepal Police</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>Legal</h4>
+                <h4>Important Resources</h4>
                 <ul>
                     <li><a href="#">Privacy Policy</a></li>
                     <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Data Protection</a></li>
+                    <li><a href="#">Data Protection Act</a></li>
                     <li><a href="#">Right to Information</a></li>
+                    <li><a href="#">Accessibility</a></li>
+                    <li><a href="#">Sitemap</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 Government of Nepal. All rights reserved. | Developed for efficient citizen services</p>
+            <p>&copy; 2025 Government of Nepal. All rights reserved. | Developed for efficient citizen services and transparent governance</p>
         </div>
     </footer>
 
