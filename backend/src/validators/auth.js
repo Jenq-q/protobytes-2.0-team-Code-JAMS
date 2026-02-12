@@ -1,5 +1,5 @@
 const {check}=require('express-validator')
-const db = require('../db')
+const db = require('../db/db')
 
 //password 
 const password = check('password').isLength({min: 6, max: 15}).withMessage('Password has to be between 6 to 15')
