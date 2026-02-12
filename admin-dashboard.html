@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Department Portal</title>
+    <link rel="stylesheet" href="portal-style.css">
+</head>
+<body class="dashboard-body admin-body">
+    
+    <!-- Dashboard Navigation -->
+    <nav class="dashboard-nav admin-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+                <div>
+                    <span>Department Portal</span>
+                    <small id="departmentName">Nepal Electricity Authority</small>
+                </div>
+            </div>
+            <div class="nav-user">
+                <div class="notification-icon" onclick="toggleNotifications()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <span class="notification-badge">12</span>
+                </div>
+                <div class="user-profile" onclick="toggleUserMenu()">
+                    <div class="user-avatar admin-avatar">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">Shyam Kumar Adhikari</span>
+                        <span class="user-role">Department Admin</span>
+                    </div>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar admin-sidebar">
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-item active" data-section="dashboard" onclick="showAdminSection('dashboard')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="sidebar-item" data-section="assigned" onclick="showAdminSection('assigned')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    <span>Assigned to Me</span>
+                    <span class="badge">8</span>
+                </a>
+                <a href="#" class="sidebar-item" data-section="collaboration" onclick="showAdminSection('collaboration')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span>Collaborations</span>
+                    <span class="badge">3</span>
+                </a>
+                <a href="#" class="sidebar-item" data-section="resolved" onclick="showAdminSection('resolved')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Resolved</span>
+                </a>
+                <a href="#" class="sidebar-item" data-section="analytics-admin" onclick="showAdminSection('analytics-admin')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="sidebar-item" data-section="team" onclick="showAdminSection('team')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    <span>Team Management</span>
+                </a>
+                <a href="#" class="sidebar-item" data-section="reports" onclick="showAdminSection('reports')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span>Reports</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="dashboard-main admin-main">
+            
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="section-header-inline">
+                    <h1>Department Overview</h1>
+                    <div class="date-display">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <span id="currentDate">February 12, 2025</span>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="stats-grid admin-stats">
+                    <div class="stat-card-dash admin-stat">
+                        <div class="stat-icon-dash new">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>8</h3>
+                            <p>New Assignments</p>
+                            <small>Last 24 hours</small>
+                        </div>
+                    </div>
+                    <div class="stat-card-dash admin-stat">
+                        <div class="stat-icon-dash pending">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>15</h3>
+                            <p>Pending Action</p>
+                            <small>Requires attention</small>
+                        </div>
+                    </div>
+                    <div class="stat-card-dash admin-stat">
+                        <div class="stat-icon-dash progress">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>12</h3>
+                            <p>In Progress</p>
+                            <small>Active cases</small>
+                        </div>
+                    </div>
+                    <div class="stat-card-dash admin-stat">
+                        <div class="stat-icon-dash resolved">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>89%</h3>
+                            <p>Resolution Rate</p>
+                            <small>This month</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Priority Complaints -->
+                <div class="dashboard-card">
+                    <div class="card-header-inline">
+                        <h2>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                            Priority Complaints
+                        </h2>
+                        <select class="priority-filter">
+                            <option>All Priorities</option>
+                            <option>High Priority</option>
+                            <option>Medium Priority</option>
+                            <option>Low Priority</option>
+                        </select>
+                    </div>
+                    <div class="complaints-table-container">
+                        <table class="complaints-table admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Priority</th>
+                                    <th>Reference</th>
+                                    <th>Subject</th>
+                                    <th>Location</th>
+                                    <th>Age</th>
+                                    <th>Assigned To</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="priority-high">
+                                    <td><span class="priority-badge high">High</span></td>
+                                    <td><strong>CPL-2025-0234</strong></td>
+                                    <td>Major Power Outage - Industrial Area</td>
+                                    <td>Kathmandu, Ward 5</td>
+                                    <td>6 hours</td>
+                                    <td>Rajesh Thapa</td>
+                                    <td>
+                                        <button class="btn-action" onclick="openComplaintDetail('CPL-2025-0234')">Review</button>
+                                    </td>
+                                </tr>
+                                <tr class="priority-high">
+                                    <td><span class="priority-badge high">High</span></td>
+                                    <td><strong>CPL-2025-0228</strong></td>
+                                    <td>Transformer Malfunction</td>
+                                    <td>Lalitpur, Ward 12</td>
+                                    <td>12 hours</td>
+                                    <td>Unassigned</td>
+                                    <td>
+                                        <button class="btn-action primary" onclick="assignComplaint('CPL-2025-0228')">Assign</button>
+                                    </td>
+                                </tr>
+                                <tr class="priority-medium">
+                                    <td><span class="priority-badge medium">Medium</span></td>
+                                    <td><strong>CPL-2025-0221</strong></td>
+                                    <td>Frequent Voltage Fluctuation</td>
+                                    <td>Bhaktapur, Ward 3</td>
+                                    <td>1 day</td>
+                                    <td>Sita Karki</td>
+                                    <td>
+                                        <button class="btn-action" onclick="openComplaintDetail('CPL-2025-0221')">Review</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity-grid">
+                    <div class="dashboard-card">
+                        <h2>Recent Activity</h2>
+                        <div class="activity-timeline">
+                            <div class="activity-item">
+                                <div class="activity-icon success">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <p><strong>Rajesh Thapa</strong> marked CPL-2025-0198 as resolved</p>
+                                    <span class="activity-time">10 minutes ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon info">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <p><strong>You</strong> updated status for CPL-2025-0234</p>
+                                    <span class="activity-time">1 hour ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon warning">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <p>New complaint <strong>CPL-2025-0234</strong> assigned to you</p>
+                                    <span class="activity-time">2 hours ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h2>Performance Metrics</h2>
+                        <div class="metrics-list">
+                            <div class="metric-item">
+                                <div class="metric-label">Avg. Resolution Time</div>
+                                <div class="metric-value">2.3 days</div>
+                                <div class="metric-trend positive">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M5 15l7-7 7 7"/>
+                                    </svg>
+                                    15% faster
+                                </div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-label">Citizen Satisfaction</div>
+                                <div class="metric-value">4.5/5.0</div>
+                                <div class="metric-trend positive">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M5 15l7-7 7 7"/>
+                                    </svg>
+                                    +0.3
+                                </div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-label">Response Rate</div>
+                                <div class="metric-value">96%</div>
+                                <div class="metric-trend positive">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M5 15l7-7 7 7"/>
+                                    </svg>
+                                    +4%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Assigned Complaints Section -->
+            <section id="assigned-section" class="content-section">
+                <div class="section-header-inline">
+                    <h1>Assigned Complaints</h1>
+                    <div class="filter-controls">
+                        <select class="filter-select">
+                            <option>All Locations</option>
+                            <option>Kathmandu</option>
+                            <option>Lalitpur</option>
+                            <option>Bhaktapur</option>
+                        </select>
+                        <input type="text" class="search-input" placeholder="Search complaints...">
+                    </div>
+                </div>
+
+                <div class="complaints-grid admin-grid">
+                    <div class="complaint-card admin-card">
+                        <div class="complaint-header">
+                            <div class="complaint-priority">
+                                <span class="priority-badge high">High Priority</span>
+                                <span class="complaint-ref">CPL-2025-0234</span>
+                            </div>
+                            <div class="complaint-age">6 hours ago</div>
+                        </div>
+                        <div class="complaint-body">
+                            <h3>Major Power Outage - Industrial Area</h3>
+                            <div class="complaint-meta">
+                                <div class="meta-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    Kathmandu, Ward 5
+                                </div>
+                                <div class="meta-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                    Reported by: Ram Sharma
+                                </div>
+                            </div>
+                            <p class="complaint-excerpt">Complete power outage affecting 50+ industrial units. Causing significant production loss...</p>
+                            
+                            <div class="action-buttons-admin">
+                                <button class="btn-admin primary" onclick="takeAction('CPL-2025-0234')">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    Take Action
+                                </button>
+                                <button class="btn-admin secondary" onclick="viewFullDetails('CPL-2025-0234')">View Details</button>
+                                <button class="btn-admin secondary" onclick="requestCollaboration('CPL-2025-0234')">Request Collab</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="complaint-card admin-card">
+                        <div class="complaint-header">
+                            <div class="complaint-priority">
+                                <span class="priority-badge high">High Priority</span>
+                                <span class="complaint-ref">CPL-2025-0228</span>
+                            </div>
+                            <div class="complaint-age">12 hours ago</div>
+                        </div>
+                        <div class="complaint-body">
+                            <h3>Transformer Malfunction</h3>
+                            <div class="complaint-meta">
+                                <div class="meta-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    Lalitpur, Ward 12
+                                </div>
+                                <div class="meta-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                    Reported by: Sita Devi
+                                </div>
+                            </div>
+                            <p class="complaint-excerpt">Transformer making loud noises and sparking. Area residents concerned about safety...</p>
+                            
+                            <div class="action-buttons-admin">
+                                <button class="btn-admin primary" onclick="takeAction('CPL-2025-0228')">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    Take Action
+                                </button>
+                                <button class="btn-admin secondary" onclick="viewFullDetails('CPL-2025-0228')">View Details</button>
+                                <button class="btn-admin secondary" onclick="assignToTeam('CPL-2025-0228')">Assign to Team</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Collaboration Section -->
+            <section id="collaboration-section" class="content-section">
+                <div class="section-header-inline">
+                    <h1>Multi-Department Collaborations</h1>
+                    <button class="btn-primary" onclick="initiateCollaboration()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Initiate Collaboration
+                    </button>
+                </div>
+
+                <div class="collab-grid">
+                    <div class="collab-card">
+                        <div class="collab-header">
+                            <h3>CPL-2025-0189 - Road Infrastructure Issue</h3>
+                            <span class="collab-status active">Active</span>
+                        </div>
+                        <div class="collab-body">
+                            <p class="collab-description">Road damage affecting electricity pole stability. Requires coordination between departments.</p>
+                            
+                            <div class="collab-departments">
+                                <h4>Involved Departments:</h4>
+                                <div class="dept-tags">
+                                    <span class="dept-tag primary">NEA (Lead)</span>
+                                    <span class="dept-tag">Ward Office - 5</span>
+                                    <span class="dept-tag">Municipality Road Dept</span>
+                                </div>
+                            </div>
+
+                            <div class="collab-progress-section">
+                                <h4>Department Progress:</h4>
+                                <div class="dept-progress-item">
+                                    <div class="dept-progress-header">
+                                        <span><strong>NEA</strong> - Pole Stabilization</span>
+                                        <span class="progress-percent">80%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 80%"></div>
+                                    </div>
+                                    <p class="progress-note">Temporary supports installed. Awaiting road repair.</p>
+                                </div>
+                                <div class="dept-progress-item">
+                                    <div class="dept-progress-header">
+                                        <span><strong>Ward Office</strong> - Site Assessment</span>
+                                        <span class="progress-percent">100%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill completed" style="width: 100%"></div>
+                                    </div>
+                                    <p class="progress-note">Assessment complete. Budget approved.</p>
+                                </div>
+                                <div class="dept-progress-item">
+                                    <div class="dept-progress-header">
+                                        <span><strong>Municipality</strong> - Road Repair</span>
+                                        <span class="progress-percent">40%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 40%"></div>
+                                    </div>
+                                    <p class="progress-note">Materials procured. Work to begin tomorrow.</p>
+                                </div>
+                            </div>
+
+                            <div class="collab-updates">
+                                <h4>Recent Updates:</h4>
+                                <div class="update-item">
+                                    <span class="update-dept">Municipality</span>
+                                    <p>Road repair scheduled for Feb 13-15. Contractor assigned.</p>
+                                    <span class="update-time">2 hours ago</span>
+                                </div>
+                                <div class="update-item">
+                                    <span class="update-dept">NEA</span>
+                                    <p>Installed temporary pole supports. Final fix pending road completion.</p>
+                                    <span class="update-time">1 day ago</span>
+                                </div>
+                            </div>
+
+                            <div class="collab-actions">
+                                <button class="btn-admin primary" onclick="updateCollabProgress('CPL-2025-0189')">Update Progress</button>
+                                <button class="btn-admin secondary" onclick="addCollabUpdate('CPL-2025-0189')">Add Update</button>
+                                <button class="btn-admin secondary" onclick="viewCollabTimeline('CPL-2025-0189')">View Timeline</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Resolved Section -->
+            <section id="resolved-section" class="content-section">
+                <div class="section-header-inline">
+                    <h1>Resolved Complaints</h1>
+                    <div class="filter-controls">
+                        <select class="filter-select">
+                            <option>Last 7 Days</option>
+                            <option>Last 30 Days</option>
+                            <option>Last 3 Months</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="complaints-table-container">
+                        <table class="complaints-table">
+                            <thead>
+                                <tr>
+                                    <th>Reference</th>
+                                    <th>Subject</th>
+                                    <th>Resolved By</th>
+                                    <th>Resolution Date</th>
+                                    <th>Rating</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>CPL-2025-0198</strong></td>
+                                    <td>Street Light Not Working</td>
+                                    <td>Rajesh Thapa</td>
+                                    <td>Feb 12, 2025</td>
+                                    <td>
+                                        <div class="rating-display">★★★★★ <span>(5.0)</span></div>
+                                    </td>
+                                    <td><button class="btn-view" onclick="viewResolution('CPL-2025-0198')">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CPL-2025-0187</strong></td>
+                                    <td>Meter Reading Error</td>
+                                    <td>Sita Karki</td>
+                                    <td>Feb 11, 2025</td>
+                                    <td>
+                                        <div class="rating-display">★★★★☆ <span>(4.0)</span></div>
+                                    </td>
+                                    <td><button class="btn-view" onclick="viewResolution('CPL-2025-0187')">View</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-admin-section" class="content-section">
+                <div class="section-header-inline">
+                    <h1>Department Analytics</h1>
+                    <select class="filter-select">
+                        <option>This Month</option>
+                        <option>Last Month</option>
+                        <option>Last 3 Months</option>
+                        <option>This Year</option>
+                    </select>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Complaint Volume Trend</h3>
+                        <div class="chart-container">
+                            <canvas id="volumeChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Resolution Time Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="resolutionChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analytics-card full-width">
+                        <h3>Geographic Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="geoChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Team Management Section -->
+            <section id="team-section" class="content-section">
+                <div class="section-header-inline">
+                    <h1>Team Members</h1>
+                    <button class="btn-primary" onclick="addTeamMember()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Add Member
+                    </button>
+                </div>
+
+                <div class="team-grid-admin">
+                    <div class="team-card-admin">
+                        <div class="team-member-avatar">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                        </div>
+                        <h3>Rajesh Thapa</h3>
+                        <p class="team-role">Senior Engineer</p>
+                        <div class="team-stats">
+                            <div class="team-stat">
+                                <strong>15</strong>
+                                <span>Active Cases</span>
+                            </div>
+                            <div class="team-stat">
+                                <strong>87%</strong>
+                                <span>Success Rate</span>
+                            </div>
+                        </div>
+                        <button class="btn-admin secondary full-width">View Profile</button>
+                    </div>
+
+                    <div class="team-card-admin">
+                        <div class="team-member-avatar">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                        </div>
+                        <h3>Sita Karki</h3>
+                        <p class="team-role">Technical Officer</p>
+                        <div class="team-stats">
+                            <div class="team-stat">
+                                <strong>12</strong>
+                                <span>Active Cases</span>
+                            </div>
+                            <div class="team-stat">
+                                <strong>91%</strong>
+                                <span>Success Rate</span>
+                            </div>
+                        </div>
+                        <button class="btn-admin secondary full-width">View Profile</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports-section" class="content-section">
+                <div class="section-header-inline">
+                    <h1>Generate Reports</h1>
+                </div>
+
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <div class="report-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <h3>Monthly Performance Report</h3>
+                        <p>Comprehensive overview of department performance</p>
+                        <button class="btn-admin primary">Generate Report</button>
+                    </div>
+                    <div class="report-card">
+                        <div class="report-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                        </div>
+                        <h3>Complaint Analytics</h3>
+                        <p>Detailed breakdown of complaints by category and location</p>
+                        <button class="btn-admin primary">Generate Report</button>
+                    </div>
+                    <div class="report-card">
+                        <div class="report-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                        </div>
+                        <h3>Team Performance</h3>
+                        <p>Individual and team metrics analysis</p>
+                        <button class="btn-admin primary">Generate Report</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Complaint Detail Modal -->
+    <div id="complaintDetailModal" class="modal large-modal">
+        <div class="modal-content modal-xl">
+            <div class="modal-header">
+                <h2>Complaint Details - <span id="modalComplaintRef"></span></h2>
+                <button class="close-btn" onclick="closeComplaintModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Complaint details will be loaded here -->
+                <div id="complaintDetailContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="portal-script.js"></script>
+</body>
+</html>

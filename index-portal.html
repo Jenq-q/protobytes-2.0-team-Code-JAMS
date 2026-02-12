@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>नागरिक सेवा पोर्टल | Citizen Service Portal</title>
+    <link rel="stylesheet" href="portal-style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="logo">
+                    <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>नागरिक सेवा पोर्टल</h1>
+                    <span class="tagline">Citizen Service Portal - Nepal Government</span>
+                </div>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="nav-btn" onclick="showLoginModal()">Sign In</button>
+                <button class="nav-btn-primary" onclick="showRegisterModal()">Register</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            <div class="hero-overlay"></div>
+            <div class="hero-pattern"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                </svg>
+                Government of Nepal Initiative
+            </div>
+            <h1 class="hero-title">Your Voice,<br/>Our Responsibility</h1>
+            <p class="hero-subtitle">
+                A unified platform connecting citizens with government services across Federal, Provincial, and Local levels. 
+                Register your grievances and complaints - we ensure they reach the right authorities.
+            </p>
+            <div class="hero-cta">
+                <button class="cta-primary" onclick="showRegisterModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Register Complaint
+                </button>
+                <button class="cta-secondary" onclick="scrollToFeatures()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Learn More
+                </button>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/>
+                        </svg>
+                    </div>
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label">Registered Citizens</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-number">85%</div>
+                    <div class="stat-label">Resolution Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-number">48hrs</div>
+                    <div class="stat-label">Avg Response Time</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <div class="header-line"></div>
+                <p>Simple, transparent, and effective grievance redressal mechanism</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-number">1</div>
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <polyline points="17 11 19 13 23 9"/>
+                        </svg>
+                    </div>
+                    <h3>Register Account</h3>
+                    <p>Create your secure account with citizenship details and contact information for verified access to services.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">2</div>
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                    </div>
+                    <h3>Lodge Complaint</h3>
+                    <p>Submit detailed complaints through our smart system that automatically categorizes and routes to appropriate authorities.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">3</div>
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                    </div>
+                    <h3>AI Classification</h3>
+                    <p>Advanced AI analyzes your complaint and intelligently routes it to Federal, Provincial, or Local government bodies.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">4</div>
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                    </div>
+                    <h3>Real-time Tracking</h3>
+                    <p>Track your complaint status in real-time with notifications at every stage from registration to resolution.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">5</div>
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                    </div>
+                    <h3>Department Collaboration</h3>
+                    <p>Multiple departments can collaborate on complex issues with coordinated updates and action plans.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-number">6</div>
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3>Resolution & Feedback</h3>
+                    <p>Receive resolution updates and provide feedback on service quality to help us improve continuously.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Government Levels Section -->
+    <section class="govt-levels-section">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Three-Tier Government System</h2>
+                <div class="header-line"></div>
+                <p>Connecting you with the right level of government</p>
+            </div>
+
+            <div class="govt-cards">
+                <div class="govt-card federal">
+                    <div class="govt-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                    <h3>Federal Government</h3>
+                    <ul>
+                        <li>National policies and laws</li>
+                        <li>Members of Parliament (MPs)</li>
+                        <li>Central ministries</li>
+                        <li>National-level issues</li>
+                    </ul>
+                </div>
+
+                <div class="govt-card provincial">
+                    <div class="govt-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                    </div>
+                    <h3>Provincial Government</h3>
+                    <ul>
+                        <li>Provincial policies</li>
+                        <li>Members of Provincial Assembly</li>
+                        <li>Provincial ministries</li>
+                        <li>Regional development</li>
+                    </ul>
+                </div>
+
+                <div class="govt-card local">
+                    <div class="govt-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <h3>Local Government</h3>
+                    <ul>
+                        <li>Ward offices</li>
+                        <li>Municipality/Rural Municipality</li>
+                        <li>Local infrastructure</li>
+                        <li>Community services</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Sign In to Your Account</h2>
+                <button class="close-btn" onclick="closeLoginModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address or Citizenship Number</label>
+                        <input type="text" id="loginEmail" name="loginEmail" required placeholder="Enter your email or citizenship number">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" name="loginPassword" required placeholder="Enter your password">
+                    </div>
+                    <div class="form-actions">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="rememberMe">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="text-link">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Sign In</button>
+                    <div class="form-footer">
+                        Don't have an account? <a href="#" onclick="switchToRegister()">Register here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>Register New Account</h2>
+                <button class="close-btn" onclick="closeRegisterModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="form-section">
+                        <h3>Personal Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fullName">Full Name *</label>
+                                <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" required placeholder="98XXXXXXXX">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="citizenship">Citizenship Number (नागरिकता नम्बर) *</label>
+                                <input type="text" id="citizenship" name="citizenship" required placeholder="XX-XX-XX-XXXXX">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Address Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="permanentProvince">Permanent Province *</label>
+                                <select id="permanentProvince" name="permanentProvince" required>
+                                    <option value="">Select Province</option>
+                                    <option value="koshi">Koshi Province</option>
+                                    <option value="madhesh">Madhesh Province</option>
+                                    <option value="bagmati">Bagmati Province</option>
+                                    <option value="gandaki">Gandaki Province</option>
+                                    <option value="lumbini">Lumbini Province</option>
+                                    <option value="karnali">Karnali Province</option>
+                                    <option value="sudurpaschim">Sudurpashchim Province</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="permanentDistrict">Permanent District *</label>
+                                <input type="text" id="permanentDistrict" name="permanentDistrict" required placeholder="Enter district">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="permanentMunicipality">Municipality/Rural Municipality *</label>
+                                <input type="text" id="permanentMunicipality" name="permanentMunicipality" required placeholder="Enter municipality">
+                            </div>
+                            <div class="form-group">
+                                <label for="permanentWard">Ward Number *</label>
+                                <input type="number" id="permanentWard" name="permanentWard" required min="1" placeholder="Enter ward number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Temporary Address (Optional)</h3>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="sameAsPermament" onchange="copyPermanentAddress()">
+                                <span>Same as permanent address</span>
+                            </label>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="temporaryProvince">Temporary Province</label>
+                                <select id="temporaryProvince" name="temporaryProvince">
+                                    <option value="">Select Province</option>
+                                    <option value="koshi">Koshi Province</option>
+                                    <option value="madhesh">Madhesh Province</option>
+                                    <option value="bagmati">Bagmati Province</option>
+                                    <option value="gandaki">Gandaki Province</option>
+                                    <option value="lumbini">Lumbini Province</option>
+                                    <option value="karnali">Karnali Province</option>
+                                    <option value="sudurpaschim">Sudurpashchim Province</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="temporaryDistrict">Temporary District</label>
+                                <input type="text" id="temporaryDistrict" name="temporaryDistrict" placeholder="Enter district">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="temporaryMunicipality">Municipality/Rural Municipality</label>
+                                <input type="text" id="temporaryMunicipality" name="temporaryMunicipality" placeholder="Enter municipality">
+                            </div>
+                            <div class="form-group">
+                                <label for="temporaryWard">Ward Number</label>
+                                <input type="number" id="temporaryWard" name="temporaryWard" min="1" placeholder="Enter ward number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Additional Information (Optional)</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nidCard">National ID Card Number</label>
+                                <input type="text" id="nidCard" name="nidCard" placeholder="Enter NID number if available">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Account Security</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="password">Password *</label>
+                                <input type="password" id="password" name="password" required placeholder="Create a strong password">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm Password *</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Re-enter your password">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="agreeTerms" required>
+                            <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-primary full-width">Create Account</button>
+                    <div class="form-footer">
+                        Already have an account? <a href="#" onclick="switchToLogin()">Sign in here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>नागरिक सेवा पोर्टल</h3>
+                <p>Empowering citizens through transparent and efficient grievance redressal across all levels of Nepal Government.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">About Portal</a></li>
+                    <li><a href="#">How It Works</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Contact Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Government Links</h4>
+                <ul>
+                    <li><a href="#">Office of Prime Minister</a></li>
+                    <li><a href="#">Ministry of Home Affairs</a></li>
+                    <li><a href="#">Provincial Governments</a></li>
+                    <li><a href="#">Local Governments</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Data Protection</a></li>
+                    <li><a href="#">Right to Information</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Government of Nepal. All rights reserved. | Developed for efficient citizen services</p>
+        </div>
+    </footer>
+
+    <script src="portal-script.js"></script>
+</body>
+</html>
