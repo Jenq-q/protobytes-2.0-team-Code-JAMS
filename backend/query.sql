@@ -1,7 +1,7 @@
 -- =================================
--- USERS / ACCOUNTS
+-- USERS
 -- =================================
-CREATE TABLE accounts (
+CREATE TABLE users (
     user_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     full_name VARCHAR(70) NOT NULL,
     phone_no VARCHAR(15) NOT NULL UNIQUE,
@@ -21,6 +21,16 @@ CREATE TABLE accounts (
     created_at DATE DEFAULT CURRENT_DATE
 );
 
+-- =================================
+-- ADMINS (Independent)
+-- =================================
+CREATE TABLE admins (
+    admin_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    full_name VARCHAR(70) NOT NULL,
+    citizenship VARCHAR(30) UNIQUE NOT NULL,  -- login field
+    password VARCHAR(255) NOT NULL,           -- login field
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- =================================
 -- COMPLAINTS / POSTS
@@ -30,13 +40,10 @@ CREATE TABLE complaints (
     user_id INT NOT NULL,
     complain_msg TEXT NOT NULL,
     img_url VARCHAR(255),
-    upvote_count INT DEFAULT 0,
-    downvote_count INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (user_id) REFERENCES accounts(user_id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
-
 
 -- =================================
 -- MINISTRIES
@@ -46,7 +53,6 @@ CREATE TABLE ministries (
     ministry_name VARCHAR(150) UNIQUE NOT NULL
 );
 
-
 -- =================================
 -- DEPARTMENTS
 -- =================================
@@ -54,7 +60,6 @@ CREATE TABLE departments (
     department_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     department_name VARCHAR(150) UNIQUE NOT NULL
 );
-
 
 -- =================================
 -- COMPLAINT ↔ MINISTRY (MANY-TO-MANY)
@@ -67,7 +72,6 @@ CREATE TABLE complaint_ministries (
     FOREIGN KEY (ministry_id) REFERENCES ministries(ministry_id) ON DELETE CASCADE
 );
 
-
 -- =================================
 -- COMPLAINT ↔ DEPARTMENT (MANY-TO-MANY)
 -- =================================
@@ -79,31 +83,29 @@ CREATE TABLE complaint_departments (
     FOREIGN KEY (department_id) REFERENCES departments(department_id) ON DELETE CASCADE
 );
 
-
 -- =================================
--- VOTES (UPVOTE/DOWNVOTE)
+-- VOTES (THUMBS UP / THUMBS DOWN)
 -- vote_type: 1 = upvote, -1 = downvote
 -- =================================
 CREATE TABLE votes (
-    complain_id INT,
-    user_id INT,
-    vote_type SMALLINT NOT NULL,
+    vote_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    complain_id INT NOT NULL,
+    user_id INT NOT NULL,
+    vote_type SMALLINT NOT NULL,  -- 1 = upvote, -1 = downvote
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    PRIMARY KEY (complain_id, user_id),
-
+    UNIQUE (complain_id, user_id),  -- prevent double voting
     FOREIGN KEY (complain_id) REFERENCES complaints(complain_id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES accounts(user_id) ON DELETE CASCADE,
-    
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+
     CHECK (vote_type IN (1, -1))
 );
-
 
 -- =================================
 -- INDEXES FOR PERFORMANCE
 -- =================================
 CREATE INDEX idx_complaints_created_at ON complaints(created_at);
-CREATE INDEX idx_complaints_upvote_count ON complaints(upvote_count);
 CREATE INDEX idx_votes_complain_id ON votes(complain_id);
 CREATE INDEX idx_complaint_ministries_complain_id ON complaint_ministries(complain_id);
 CREATE INDEX idx_complaint_departments_complain_id ON complaint_departments(complain_id);
+CREATE INDEX idx_votes_user_id ON votes(user_id);
