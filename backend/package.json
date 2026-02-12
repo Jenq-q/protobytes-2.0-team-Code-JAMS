@@ -1,12 +1,11 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "JWT-based authentication system for users and admins",
+  "description": "",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
-    "create-admin": "node scripts/create-admin.js"
+    "dev": "nodemon server.js"
   },
   "keywords": [
     "jwt",
