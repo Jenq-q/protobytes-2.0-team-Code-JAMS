@@ -5,6 +5,31 @@
     'use strict';
     var API = 'http://localhost:3000/api';
 
+    // Admin's department — determines what they see
+    // This gets set from the nav bar department name or login data
+    var adminDepartment = null;
+
+    function detectDepartment() {
+        // Read from the admin dashboard nav
+        var deptEl = document.getElementById('departmentName');
+        if (deptEl && deptEl.textContent.trim()) {
+            adminDepartment = deptEl.textContent.trim();
+        }
+        // Fallback: check URL params or default
+        if (!adminDepartment) {
+            var params = new URLSearchParams(window.location.search);
+            adminDepartment = params.get('dept') || null;
+        }
+        if (adminDepartment) {
+            console.log('[Admin] Department filter:', adminDepartment);
+        }
+    }
+
+    function deptParam() {
+        if (!adminDepartment) return '';
+        return '&department=' + encodeURIComponent(adminDepartment);
+    }
+
     async function api(method, path, body) {
         var opts = { method:method, headers:{'Content-Type':'application/json'} };
         if (body) opts.body = JSON.stringify(body);
@@ -156,7 +181,7 @@
     // =====================================================
     async function loadDashboard() {
         try {
-            var dash = await api('GET','/admin/dashboard');
+            var dash = await api('GET','/admin/dashboard?_=1'+deptParam());
             var d = dash.data;
             var stats = document.querySelectorAll('.admin-stats .stat-info h3');
             if (stats.length>=4) { stats[0].textContent=d.stats.newAssignments; stats[1].textContent=d.stats.pendingAction; stats[2].textContent=d.stats.inProgress; stats[3].textContent=d.stats.resolutionRate+'%'; }
@@ -176,7 +201,7 @@
     // =====================================================
     async function loadPriorityTable(locationFilter) {
         try {
-            var path = '/admin/complaints?limit=15';
+            var path = '/admin/complaints?limit=15'+deptParam();
             if (locationFilter) path += '&location=' + encodeURIComponent(locationFilter);
             var result = await api('GET', path);
             var tbody = document.querySelector('.admin-table tbody');
@@ -210,7 +235,7 @@
 
     async function loadLocationChips() {
         try {
-            var result = await api('GET', '/complaints/location-summary');
+            var result = await api('GET', '/complaints/location-summary?_=1'+deptParam());
             var container = document.querySelector('.card-header-inline');
             if (!container) return;
 
@@ -248,7 +273,7 @@
     // =====================================================
     async function loadRecentActivity() {
         try {
-            var result = await api('GET','/complaints?limit=5');
+            var result = await api('GET','/admin/complaints?limit=5'+deptParam());
             var tl = document.querySelector('.activity-timeline');
             if (!tl) return;
             var html = '';
@@ -266,7 +291,7 @@
     // =====================================================
     async function loadAssignedComplaints() {
         try {
-            var result = await api('GET','/admin/complaints');
+            var result = await api('GET','/admin/complaints?_=1'+deptParam());
             var grid = document.querySelector('#assigned-section .complaints-grid') || document.querySelector('#assigned-section .admin-grid');
             if (!grid) return;
             var unresolved = result.data.filter(function(c){return c.status!=='resolved';});
@@ -285,7 +310,7 @@
     // =====================================================
     async function loadResolvedComplaints() {
         try {
-            var result = await api('GET','/complaints?status=resolved');
+            var result = await api('GET','/admin/complaints?status=resolved'+deptParam());
             var tbody = document.querySelector('#resolved-section .complaints-table tbody');
             if (!tbody) return;
             var html = '';
@@ -498,6 +523,7 @@
     // =====================================================
     async function init() {
         injectStyles();
+        detectDepartment();
         console.log('[Admin v2] Initializing...');
         try {
             await fetch(API+'/health');
