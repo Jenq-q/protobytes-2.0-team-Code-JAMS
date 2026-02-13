@@ -1,0 +1,56 @@
+{
+  "corruption": {
+    "category": "Corruption & Bribery",
+    "level": "Federal",
+    "department": "CIAA - Commission for Investigation of Abuse of Authority",
+    "sla_hours": 12
+  },
+  "electricity": {
+    "category": "Electricity",
+    "level": "Federal",
+    "department": "Nepal Electricity Authority (NEA)",
+    "sla_hours": 24
+  },
+  "water": {
+    "category": "Water Supply",
+    "level": "Local",
+    "department": "Nepal Water Supply Corporation",
+    "sla_hours": 24
+  },
+  "road": {
+    "category": "Road & Infrastructure",
+    "level": "Local",
+    "department": "Department of Roads / Local Ward Office",
+    "sla_hours": 48
+  },
+  "law": {
+    "category": "Law & Order",
+    "level": "Provincial",
+    "department": "Nepal Police / District Police Office",
+    "sla_hours": 12
+  },
+  "health": {
+    "category": "Health Services",
+    "level": "Provincial",
+    "department": "Ministry of Health / District Health Office",
+    "sla_hours": 24
+  },
+  "environment": {
+    "category": "Environment",
+    "level": "Local",
+    "department": "Municipal Environment Division",
+    "sla_hours": 48
+  },
+  "education": {
+    "category": "Education",
+    "level": "Provincial",
+    "department": "District Education Office",
+    "sla_hours": 48
+  },
+  "other": {
+    "category": "General",
+    "level": "Local",
+    "department": "Local Ward Office",
+    "sla_hours": 48
+  }
+}
