@@ -99,81 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     console.log('Nepal Citizen Service Portal loaded successfully');
 });
-// =====================================================
-// FORM HANDLERS
-// =====================================================
-function handleLogin(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const role = formData.get('loginRole');
-    const email = formData.get('loginEmail');
-    
-    console.log('Login attempt:', { role, email });
-    
-    const submitBtn = event.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = 'Signing in...';
-    submitBtn.disabled = true;
-    
-    setTimeout(() => {
-        closeLoginModal();
-        // Redirect based on role
-        if (role === 'citizen') {
-            window.location.href = 'user-dashboard.html';
-        } else {
-            window.location.href = 'admin-dashboard.html';
-        }
-    }, 1000);
-    
-    return false;
-}
-
-function handleRegister(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    
-    // Validate passwords match
-    const password = formData.get('password');
-    const confirmPassword = formData.get('confirmPassword');
-    
-    if (password !== confirmPassword) {
-        showNotification('Passwords do not match!', 'warning');
-        return;
-    }
-    
-    // Get all form data
-    const registrationData = {
-        fullName: formData.get('fullName'),
-        phone: formData.get('phone'),
-        email: formData.get('email'),
-        citizenship: formData.get('citizenship'),
-        permanentProvince: formData.get('permanentProvince'),
-        permanentDistrict: formData.get('permanentDistrict'),
-        permanentMunicipality: formData.get('permanentMunicipality'),
-        permanentWard: formData.get('permanentWard'),
-        temporaryProvince: formData.get('temporaryProvince'),
-        temporaryDistrict: formData.get('temporaryDistrict'),
-        temporaryMunicipality: formData.get('temporaryMunicipality'),
-        temporaryWard: formData.get('temporaryWard'),
-        nidCard: formData.get('nidCard')
-    };
-    
-    console.log('Registration data:', registrationData);
-    
-    // Show loading state
-    const submitBtn = event.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = 'Creating Account...';
-    submitBtn.disabled = true;
-    
-    setTimeout(() => {
-        showNotification('Account created successfully! Redirecting to dashboard...', 'success');
-        
-        setTimeout(() => {
-            window.location.href = 'user-dashboard.html';
-        }, 1500);
-    }, 2000);
-}
 
 function copyPermanentAddress() {
     const checkbox = document.getElementById('sameAsPermament');
@@ -555,31 +480,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // =====================================================
-// FILTER AND SEARCH FUNCTIONS
-// =====================================================
-function filterComplaints(status) {
-    const cards = document.querySelectorAll('.complaint-card');
-    
-    cards.forEach(card => {
-        if (status === 'all' || card.dataset.status === status) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-
-// =====================================================
 // TRACK COMPLAINT FUNCTION
 // =====================================================
-function trackComplaint() {
-    const trackingNumber = document.getElementById('trackingNumber').value.trim();
-    const resultDiv = document.getElementById('trackingResult');
-    
-    if (!trackingNumber) {
-        showNotification('Please enter a reference number', 'warning');
-        return;
-    }
+
     
     // Simulate API call
     showNotification('Searching for complaint...', 'info');
@@ -627,7 +530,7 @@ function trackComplaint() {
             `;
         }
     }, 1000);
-}
+
 
 // =====================================================
 // RATING SYSTEM
@@ -687,14 +590,9 @@ function submitFeedback(event) {
 // =====================================================
 // VIEW COMPLAINT DETAILS
 // =====================================================
-function viewComplaint(refNumber) {
-    showNotification(`Loading details for ${refNumber}...`, 'info');
-    // In a real application, this would open a modal with full complaint details
-}
 
-function viewComplaintDetails(refNumber) {
-    viewComplaint(refNumber);
-}
+
+
 
 // =====================================================
 // ADMIN FUNCTIONS
@@ -772,9 +670,7 @@ function takeAction(refNumber) {
     closeComplaintModal();
 }
 
-function assignComplaint(refNumber) {
-    showNotification(`Opening assignment dialog for ${refNumber}...`, 'info');
-}
+
 
 function requestCollaboration(refNumber) {
     showNotification('Collaboration request sent to relevant departments', 'success');
@@ -839,3 +735,645 @@ console.log('%c🏛️ Nepal Citizen Service Portal', 'color: #dc2626; font-size
 console.log('%cGovernment of Nepal Initiative', 'color: #ea580c; font-size: 16px; font-weight: bold;');
 console.log('%cVersion 1.0.0', 'color: #737373; font-size: 14px;');
 
+// ========================================================
+// CONFIG
+// ========================================================
+
+const API_DASHBOARD = "http://localhost:8000/api/dashboard";
+
+let currentComplaints = []; // store for client-side sorting
+
+
+// ========================================================
+// FETCH COMPLAINTS
+// ========================================================
+
+async function fetchComplaints(type = "all") {
+    try {
+
+        const endpointMap = {
+            all: "/newest-first",
+            recent: "/newest-first",
+            trending: "/highest-upvote"
+        };
+
+        const endpoint = endpointMap[type] || "/newest-first";
+
+        console.log("Fetching:", endpoint);
+
+        const response = await fetch(
+            `${API_DASHBOARD}${endpoint}?limit=20`
+        );
+
+        const data = await response.json();
+
+        currentComplaints = data; // store for sorting
+        renderComplaints(currentComplaints);
+
+    } catch (error) {
+        console.error("Error fetching complaints:", error);
+    }
+}
+
+
+// ========================================================
+// RENDER CARDS
+// ========================================================
+
+function renderComplaints(complaints) {
+
+    const grid = document.getElementById("complaintGrid");
+    if (!grid) return;
+
+    grid.innerHTML = "";
+
+    complaints.forEach(c => {
+
+        const upvotes = parseInt(c.upvotes);
+        const downvotes = parseInt(c.downvotes);
+
+        const card = document.createElement("div");
+        card.className = "complaint-card";
+
+        card.innerHTML = `
+            <div class="complaint-header">
+                <span class="complaint-id">
+                    CPL-${c.complain_id}
+                </span>
+
+                <span class="priority-badge ${c.status}">
+                    ${c.status.toUpperCase()}
+                </span>
+            </div>
+
+            ${c.img_url ? `
+                <img src="${c.img_url}" class="complaint-image"/>
+            ` : ""}
+
+            <h3 class="complaint-title">
+                ${c.complain_msg}
+            </h3>
+
+            <div class="complaint-meta">
+                <div class="complaint-category">
+                    ${c.departments || "General Department"}
+                </div>
+
+                <span class="complaint-date">
+                    ${new Date(c.created_at).toLocaleDateString()}
+                </span>
+            </div>
+
+            <div class="complaint-actions">
+                <button class="upvote-btn">
+                    👍 <span>${upvotes}</span>
+                </button>
+
+                <button class="downvote-btn">
+                    👎 <span>${downvotes}</span>
+                </button>
+            </div>
+        `;
+
+        grid.appendChild(card);
+    });
+}
+
+
+// ========================================================
+// SORTING (CLIENT SIDE)
+// ========================================================
+
+function sortComplaints(option) {
+
+    let sorted = [...currentComplaints];
+
+    switch (option) {
+
+        case "upvotes":
+            sorted.sort((a, b) =>
+                parseInt(b.upvotes) - parseInt(a.upvotes)
+            );
+            break;
+
+        case "recent":
+            sorted.sort((a, b) =>
+                new Date(b.created_at) - new Date(a.created_at)
+            );
+            break;
+
+        case "category":
+            sorted.sort((a, b) =>
+                (a.departments || "").localeCompare(b.departments || "")
+            );
+            break;
+
+        case "priority":
+        default:
+            sorted.sort((a, b) =>
+                a.status.localeCompare(b.status)
+            );
+    }
+
+    renderComplaints(sorted);
+}
+
+
+// ========================================================
+// TAB SWITCHING
+// ========================================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const tabs = document.querySelectorAll(".explore-tab");
+    const sortSelect = document.getElementById("exploreSort");
+
+    // Tab Click
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function () {
+
+            tabs.forEach(t => t.classList.remove("active"));
+            this.classList.add("active");
+
+            const type = this.dataset.type;
+
+            fetchComplaints(type);
+        });
+    });
+
+    // Dropdown Sort
+    if (sortSelect) {
+    sortSelect.addEventListener("change", function () {
+        sortComplaints(this.value);
+    });
+}
+
+
+    // Initial Load
+    fetchComplaints("all");
+});
+
+// =====================================================
+// BACKEND API INTEGRATION
+// Add this at the END of portal-script.js or include as separate file
+// =====================================================
+
+const API_BASE = 'http://localhost:8000/api';
+
+// =====================================================
+// OVERRIDE LOGIN FUNCTION WITH API CALL
+// =====================================================
+async function handleLogin(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const role = formData.get('loginRole');
+    const email = formData.get('loginEmail');
+    const password = formData.get('loginPassword');
+    const citizenship = formData.get('loginCitizenship');
+    
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = 'Signing in...';
+    submitBtn.disabled = true;
+    
+    try {
+        let response;
+        
+        if (role === 'citizen') {
+            // User login
+            response = await fetch(`${API_BASE}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+        } else {
+            // Admin login
+            response = await fetch(`${API_BASE}/admin/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ citizenship, password })
+            });
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Store tokens
+            localStorage.setItem('accessToken', data.accessToken);
+            localStorage.setItem('refreshToken', data.refreshToken);
+            localStorage.setItem('userRole', role);
+            localStorage.setItem('userInfo', JSON.stringify(role === 'citizen' ? data.user : data.admin));
+            
+            showNotification('Login successful!', 'success');
+            
+            setTimeout(() => {
+                closeLoginModal();
+                window.location.href = role === 'citizen' ? 'user-dashboard.html' : 'admin-dashboard.html';
+            }, 1000);
+        } else {
+            throw new Error(data.message || 'Login failed');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        showNotification(error.message || 'Login failed. Please check your credentials.', 'error');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }
+    
+    return false;
+}
+
+// =====================================================
+// OVERRIDE REGISTER FUNCTION WITH API CALL
+// =====================================================
+async function handleRegister(event) {
+    return handleRegistration(event);
+}
+
+async function handleRegister(event) {
+    return handleRegistration(event);
+}
+
+async function handleRegistration(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    
+    // Validate passwords match
+    const password = formData.get('password');
+    const confirmPassword = formData.get('confirmPassword');
+    
+    if (password !== confirmPassword) {
+        showNotification('Passwords do not match!', 'warning');
+        return;
+    }
+    
+    // Prepare data for backend - matching database schema exactly
+    const registrationData = {
+        full_name: formData.get('fullName'),
+        phone_no: formData.get('phoneNumber'),
+        email: formData.get('email'),
+        password: password,
+        citizenship: formData.get('citizenship'),
+        home_no: parseInt(formData.get('houseNumber')) || 0,
+        permanent_province: formData.get('permanentProvince'),
+        permanent_district: formData.get('permanentDistrict'),
+        permanent_municipality: formData.get('permanentMunicipality'),
+        permanent_ward: parseInt(formData.get('permanentWard')),  // INT in database
+        temporary_province: formData.get('temporaryProvince') || null,
+        temporary_district: formData.get('temporaryDistrict') || null,
+        temporary_municipality: formData.get('temporaryMunicipality') || null,
+        temporary_ward: formData.get('temporaryWard') ? parseInt(formData.get('temporaryWard')) : null,  // INT in database
+        nid: formData.get('nidCard') || null
+    };
+    
+    console.log('Registration data being sent:', registrationData);
+    
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = 'Creating Account...';
+    submitBtn.disabled = true;
+    
+    try {
+        const response = await fetch(`${API_BASE}/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(registrationData)
+        });
+        
+        const data = await response.json();
+        
+        console.log('Server response:', data);
+        
+        if (response.ok && data.success) {
+            // Store tokens
+            localStorage.setItem('accessToken', data.accessToken);
+            localStorage.setItem('refreshToken', data.refreshToken);
+            localStorage.setItem('userRole', 'citizen');
+            localStorage.setItem('userInfo', JSON.stringify(data.user));
+            
+            showNotification('Account created successfully! Redirecting to dashboard...', 'success');
+            
+            setTimeout(() => {
+                closeRegisterModal();
+                window.location.href = 'user-dashboard.html';
+            }, 1500);
+        } else {
+            // Handle validation errors
+            if (data.errors && Array.isArray(data.errors)) {
+                const errorMessages = data.errors.map(e => e.msg || e.message).join(', ');
+                throw new Error(errorMessages);
+            } else {
+                throw new Error(data.message || 'Registration failed');
+            }
+        }
+    } catch (error) {
+        console.error('Registration error:', error);
+        showNotification(error.message || 'Registration failed. Please try again.', 'error');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }
+}
+
+// =====================================================
+// LOGOUT FUNCTION
+// =====================================================
+async function handleLogout() {
+    try {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            await fetch(`${API_BASE}/auth/logout`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+    } finally {
+        localStorage.clear();
+        window.location.href = 'index-portal.html';
+    }
+}
+
+// =====================================================
+// DASHBOARD PROTECTION
+// =====================================================
+document.addEventListener('DOMContentLoaded', function() {
+    const isDashboard = window.location.pathname.includes('dashboard');
+    
+    if (isDashboard) {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            window.location.href = 'index-portal.html';
+            return;
+        }
+        
+        // Update user info in dashboard
+        const userInfo = localStorage.getItem('userInfo');
+        if (userInfo) {
+            try {
+                const user = JSON.parse(userInfo);
+                const userNameEl = document.getElementById('userName');
+                if (userNameEl) {
+                    userNameEl.textContent = user.fullName || user.full_name || user.full_name || 'User';
+                }
+            } catch (e) {
+                console.error('Error parsing user info:', e);
+            }
+        }
+    }
+});
+
+// =====================================================
+// COMPLAINT SUBMISSION - Add this to api-integration-simple.js
+// =====================================================
+
+// Override submitComplaint function
+async function submitComplaint(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    
+    // Get the complaint message (combine title and description)
+    const title = formData.get('complaintTitle');
+    const description = formData.get('complaintDescription');
+    
+    // Combine title and description with category info
+    const complain_msg = ` ${title}\n\n${description}\n\nLocation: ${formData.get('province')}, ${formData.get('district')}, ${formData.get('municipality')}, Ward ${formData.get('wardNo')}${formData.get('specificLocation') ? ', ' + formData.get('specificLocation') : ''}`;
+    
+    const complaintData = {
+        complain_msg: complain_msg,
+        img_url: null, // You can implement file upload separately
+        ministry_ids: [], // Can be added later based on category mapping
+        department_ids: [] // Can be added later based on category mapping
+    };
+    
+    console.log('Submitting complaint:', complaintData);
+    
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalHTML = submitBtn.innerHTML;
+    submitBtn.innerHTML = 'Submitting...';
+    submitBtn.disabled = true;
+    
+    try {
+        const token = localStorage.getItem('accessToken');
+        
+        if (!token) {
+            showNotification('Please login to submit a complaint', 'error');
+            window.location.href = 'index-portal.html';
+            return;
+        }
+        
+        const response = await fetch(`${API_BASE}/complaints`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(complaintData)
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+            const referenceNo = `CPL-${String(data.complaint.complain_id).padStart(4, '0')}`;
+            
+            showNotification(`Complaint registered successfully! Reference No: ${referenceNo}`, 'success');
+            
+            // Reset form
+            event.target.reset();
+            const charCount = document.getElementById('charCount');
+            if (charCount) charCount.textContent = '0';
+            
+            // Switch to my complaints section after a delay
+            setTimeout(() => {
+                showSection('my-complaints');
+                loadMyComplaints(); // Load user's complaints
+            }, 2000);
+        } else {
+            throw new Error(data.message || 'Failed to submit complaint');
+        }
+        
+    } catch (error) {
+        console.error('Error submitting complaint:', error);
+        showNotification(error.message || 'Failed to submit complaint. Please try again.', 'error');
+    } finally {
+        submitBtn.innerHTML = originalHTML;
+        submitBtn.disabled = false;
+    }
+}
+
+// Load user's own complaints
+async function loadMyComplaints() {
+    try {
+        const token = localStorage.getItem('accessToken');
+        
+        if (!token) {
+            window.location.href = 'index-portal.html';
+            return;
+        }
+        
+        const response = await fetch(`${API_BASE}/complaints/my-complaints`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        const complaints = await response.json();
+        
+        // Display complaints in the my-complaints section
+        displayMyComplaints(complaints);
+        
+    } catch (error) {
+        console.error('Error loading complaints:', error);
+        showNotification('Failed to load your complaints', 'error');
+    }
+}
+
+// Display user's complaints
+// IMMEDIATE FIX - Add this to portal-script.js
+// Replace your existing displayMyComplaints function
+
+// FIXED VERSION - No variable conflicts
+// Replace your displayMyComplaints function with this
+
+function displayMyComplaints(complaints) {
+    console.log('=== displayMyComplaints called ===');
+    console.log('Complaints to display:', complaints);
+    
+    // Find the container
+    let container = document.getElementById('myComplaintsContainer');
+    
+    if (!container) {
+        const myComplaintsSection = document.getElementById('my-complaints-section');
+        console.log('Section element:', myComplaintsSection);
+        
+        if (myComplaintsSection) {
+            // Try to find existing grid
+            container = myComplaintsSection.querySelector('.complaints-grid');
+            console.log('Found .complaints-grid:', container);
+            
+            if (!container) {
+                // Look for any element that might be the container
+                const possibleContainers = myComplaintsSection.querySelectorAll('div[class*="complaint"]');
+                console.log('Possible containers:', possibleContainers);
+                
+                if (possibleContainers.length > 0) {
+                    container = possibleContainers[0].parentElement;
+                }
+            }
+            
+            // If still not found, create it
+            if (!container) {
+                console.log('Creating new container...');
+                container = document.createElement('div');
+                container.className = 'complaints-grid';
+                container.id = 'myComplaintsContainer';
+                
+                // Find where to insert it
+                const headerElement = myComplaintsSection.querySelector('.section-header-inline');
+                if (headerElement && headerElement.nextElementSibling) {
+                    headerElement.parentNode.insertBefore(container, headerElement.nextElementSibling);
+                } else {
+                    myComplaintsSection.appendChild(container);
+                }
+                console.log('Container created and inserted');
+            }
+        }
+    }
+    
+    if (!container) {
+        console.error('❌ Still no container found!');
+        alert('Error: Cannot find or create complaints container. Check your HTML structure.');
+        return;
+    }
+    
+    console.log('✅ Using container:', container);
+    
+    // Clear any existing dummy content
+    container.innerHTML = '';
+    
+    if (complaints.length === 0) {
+        container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #6b7280;">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 1rem;">
+                    <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <h3 style="margin-bottom: 0.5rem; color: #374151;">No complaints yet</h3>
+                <p style="color: #6b7280; margin-bottom: 1rem;">You haven't submitted any complaints. Click "New Complaint" to get started.</p>
+                <button class="btn-primary" onclick="showSection('new-complaint')">Submit Your First Complaint</button>
+            </div>
+        `;
+        console.log('✅ Displayed empty state');
+        return;
+    }
+    
+    // Build HTML for all complaints
+    let html = '';
+    complaints.forEach(complaint => {
+        const createdDate = new Date(complaint.created_at);
+        const dateStr = createdDate.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric' 
+        });
+        
+        const lines = complaint.complain_msg.split('\n');
+        const title = lines[0] || 'Complaint';
+        const safetitle = escapeHTML(title.substring(0, 100));
+        const safeMsg = escapeHTML(complaint.complain_msg.substring(0, 200));
+        
+        html += `
+            <div class="complaint-card" data-status="pending">
+                <div class="complaint-header">
+                    <div>
+                        <h3>${safetitle}</h3>
+                        <p class="complaint-ref">CPL-${String(complaint.complain_id).padStart(4, '0')}</p>
+                    </div>
+                    <span class="status-badge pending">Pending</span>
+                </div>
+                <div class="complaint-body">
+                    <div class="complaint-meta">
+                        <span><strong>Submitted:</strong> ${dateStr}</span>
+                    </div>
+                    <p class="complaint-excerpt">${safeMsg}${complaint.complain_msg.length > 200 ? '...' : ''}</p>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem; color: #6b7280; font-size: 0.875rem;">
+                        <span>👍 ${complaint.upvotes || 0} upvotes</span>
+                        <span>👎 ${complaint.downvotes || 0}</span>
+                    </div>
+                </div>
+                <div class="complaint-footer">
+                    <button class="btn-view" onclick="viewMyComplaintDetails(${complaint.complain_id})">View Details</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    console.log(`✅ Displayed ${complaints.length} complaint(s) in container`);
+}
+
+// Add click handler to My Complaints link
+setTimeout(function() {
+    const myComplaintsLink = document.querySelector('a[data-section="my-complaints"]');
+    
+    if (myComplaintsLink) {
+        console.log('✅ Adding click handler to My Complaints link');
+        
+        myComplaintsLink.addEventListener('click', function() {
+            console.log('🔄 My Complaints clicked!');
+            setTimeout(function() {
+                console.log('Loading complaints...');
+                loadMyComplaints();
+            }, 300);
+        });
+    }
+}, 1000);
+
+function escapeHTML(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}

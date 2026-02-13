@@ -7,6 +7,7 @@ const baseQuery = `
     c.complain_id,
     c.complain_msg,
     c.img_url,
+    c.status,
     c.created_at,
 
     COALESCE(SUM(CASE WHEN v.vote_type = 1 THEN 1 ELSE 0 END), 0) AS upvotes,
