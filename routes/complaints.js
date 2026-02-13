@@ -259,11 +259,19 @@ router.get('/leaderboard', (req, res) => {
 // GET /api/complaints/location-summary (Easy Win #3)
 // =====================================================
 router.get('/location-summary', (req, res) => {
+  const { department } = req.query;
   const store = getStore();
   const locMap = {};
 
   store.forEach(c => {
     if (c.status === 'resolved') return;
+    // Filter by department if provided
+    if (department) {
+      if (!c.classification || !c.classification.department) return;
+      const cDept = c.classification.department.toLowerCase();
+      const dLower = department.toLowerCase();
+      if (!cDept.includes(dLower) && !dLower.includes(cDept)) return;
+    }
     const key = (c.location.district || 'Unknown') + ' Ward ' + (c.location.ward || '?');
     if (!locMap[key]) {
       locMap[key] = { location: key, district: c.location.district || 'Unknown', ward: c.location.ward || '?', count: 0, highPriority: 0, citizensAffected: 0 };
@@ -277,7 +285,6 @@ router.get('/location-summary', (req, res) => {
 
   res.json({ success: true, count: locations.length, data: locations });
 });
-
 // =====================================================
 // GET /api/complaints/sla-check (Easy Win #1)
 // =====================================================

@@ -67,7 +67,19 @@ let collaborations = [
 
 // GET /api/admin/dashboard
 router.get('/dashboard', (req, res) => {
-  const all = getComplaints();
+  const { department } = req.query;
+  let all = getComplaints();
+
+  // Filter by department if provided
+  if (department) {
+    const deptLower = department.toLowerCase();
+    all = all.filter(c => {
+      if (!c.classification || !c.classification.department) return false;
+      const cDept = c.classification.department.toLowerCase();
+      return cDept.includes(deptLower) || deptLower.includes(cDept);
+    });
+  }
+
   const now = new Date();
   const last24h = new Date(now.getTime() - 24 * 3600000);
 
@@ -114,10 +126,21 @@ router.get('/dashboard', (req, res) => {
 // COMPLAINT MANAGEMENT (Admin)
 // =====================================================
 
-// GET /api/admin/complaints — all complaints with filters
+// GET /api/admin/complaints — filtered by department
 router.get('/complaints', (req, res) => {
-  const { status, priority, assignedTo, location, search, limit, page } = req.query;
+  const { status, priority, assignedTo, location, search, limit, page, department } = req.query;
   let results = [...getComplaints()];
+
+  // Filter by department if provided
+  if (department) {
+    const deptLower = department.toLowerCase();
+    results = results.filter(c => {
+      if (!c.classification || !c.classification.department) return false;
+      const cDept = c.classification.department.toLowerCase();
+      // Match if either contains the other
+      return cDept.includes(deptLower) || deptLower.includes(cDept);
+    });
+  }
 
   if (status) results = results.filter(c => c.status === status);
   if (priority) results = results.filter(c => c.priority === priority);
