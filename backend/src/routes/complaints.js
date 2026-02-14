@@ -227,5 +227,164 @@ router.post('/:id/vote', authenticateUser, async (req, res) => {
     });
   }
 });
+// POST /api/complaints/vote - Vote on a complaint
+router.post('/vote', async (req, res) => {
+  const client = await db.getClient();
+  
+  try {
+    const { complaintId, userId, voteType } = req.body;
+
+    if (!complaintId || !userId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Complaint ID and User ID required'
+      });
+    }
+
+    if (voteType !== 1 && voteType !== -1) {
+      return res.status(400).json({
+        success: false,
+        error: 'Vote type must be 1 (upvote) or -1 (downvote)'
+      });
+    }
+
+    await client.query('BEGIN');
+
+    const existingVote = await client.query(
+      'SELECT vote_id, vote_type FROM votes WHERE complain_id = $1 AND user_id = $2',
+      [complaintId, userId]
+    );
+
+    if (existingVote.rows.length > 0) {
+      if (existingVote.rows[0].vote_type === voteType) {
+        await client.query(
+          'DELETE FROM votes WHERE complain_id = $1 AND user_id = $2',
+          [complaintId, userId]
+        );
+        await client.query('COMMIT');
+        return res.json({
+          success: true,
+          message: 'Vote removed',
+          action: 'removed'
+        });
+      } else {
+        await client.query(
+          'UPDATE votes SET vote_type = $1, updated_at = CURRENT_TIMESTAMP WHERE complain_id = $2 AND user_id = $3',
+          [voteType, complaintId, userId]
+        );
+        await client.query('COMMIT');
+        return res.json({
+          success: true,
+          message: 'Vote updated',
+          action: 'updated',
+          voteType: voteType
+        });
+      }
+    } else {
+      await client.query(
+        'INSERT INTO votes (complain_id, user_id, vote_type) VALUES ($1, $2, $3)',
+        [complaintId, userId, voteType]
+      );
+      await client.query('COMMIT');
+      return res.json({
+        success: true,
+        message: 'Vote registered',
+        action: 'added',
+        voteType: voteType
+      });
+    }
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Vote error:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Server error while processing vote'
+    });
+  } finally {
+    client.release();
+  }
+});
+
+// DELETE /api/complaints/vote - Remove vote
+router.delete('/vote', async (req, res) => {
+  try {
+    const { complaintId, userId } = req.body;
+
+    if (!complaintId || !userId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Complaint ID and User ID required'
+      });
+    }
+
+    const result = await db.query(
+      'DELETE FROM votes WHERE complain_id = $1 AND user_id = $2 RETURNING vote_id',
+      [complaintId, userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Vote not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Vote removed successfully'
+    });
+  } catch (err) {
+    console.error('Remove vote error:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Server error'
+    });
+  }
+});
+
+// GET /api/complaints/:id/vote - Get user's vote on a complaint
+router.get('/:id/vote', async (req, res) => {
+  try {
+    const complaintId = req.params.id;
+    const userId = req.query.userId;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: 'User ID required'
+      });
+    }
+
+    const result = await db.query(
+      'SELECT vote_type, created_at FROM votes WHERE complain_id = $1 AND user_id = $2',
+      [complaintId, userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.json({
+        success: true,
+        data: {
+          hasVoted: false,
+          voteType: null
+        }
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        hasVoted: true,
+        voteType: result.rows[0].vote_type,
+        votedAt: result.rows[0].created_at
+      }
+    });
+  } catch (err) {
+    console.error('Get vote error:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Server error'
+    });
+  }
+});
 
 module.exports = router;

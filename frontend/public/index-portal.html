@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>नागरिक सेवा पोर्टल | Citizen Service Portal - Government of Nepal</title>
     <link rel="stylesheet" href="portal-style.css">
+    
 </head>
 <body>
     <!-- Navigation Bar -->
+     
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -160,9 +162,9 @@
                             <span class="upvote-count">1,247</span>
                         </button>
                         <button class="report-btn" onclick="reportComplaint(1)" title="Report inappropriate content">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <!-- <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                            </svg>
+                            </svg> -->
                         </button>
                     </div>
                 </div>
@@ -194,9 +196,9 @@
                             <span class="upvote-count">856</span>
                         </button>
                         <button class="report-btn" onclick="reportComplaint(2)">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <!-- <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                            </svg>
+                            </svg> -->
                         </button>
                     </div>
                 </div>
@@ -228,9 +230,9 @@
                             <span class="upvote-count">432</span>
                         </button>
                         <button class="report-btn" onclick="reportComplaint(3)">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <!-- <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                            </svg>
+                            </svg> -->
                         </button>
                     </div>
                 </div>
@@ -262,9 +264,9 @@
                             <span class="upvote-count">187</span>
                         </button>
                         <button class="report-btn" onclick="reportComplaint(4)">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <!-- <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                            </svg>
+                            </svg> -->
                         </button>
                     </div>
                 </div>
@@ -492,9 +494,13 @@
                     <div class="form-section">
                         <h3>Personal Information</h3>
                         <div class="form-row">
-                            <div class="form-group">
-                                <label for="fullName">Full Name*</label>
+                            <!-- <div class="form-group">
+                                <label for="fullName">Full Name (Nepali) *</label>
                                 <input type="text" id="fullName" name="fullName" required placeholder="पूरा नाम">
+                            </div> -->
+                            <div class="form-group">
+                                <label for="fullNameEng">Full Name (English) *</label>
+                                <input type="text" id="fullNameEng" name="fullNameEng" required placeholder="Full Name">
                             </div>
                         </div>
                         <div class="form-row">
@@ -714,7 +720,8 @@
             <p>&copy; 2025 Government of Nepal. All rights reserved. | Developed for efficient citizen services and transparent governance</p>
         </div>
     </footer>
-
-    <script src="portal-script.js"></script>
+<script src="api-connect.js"></script>
+     <script src="portal-script.js"></script>
+    
 </body>
 </html>

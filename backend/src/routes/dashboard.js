@@ -1,73 +1,376 @@
+// routes/dashboard.js - Public Dashboard Feed
 const express = require('express');
-const pool = require('../db/db');
+const db = require('../db/db');
 const router = express.Router();
 
+// Base query for complaint listings with aggregated data
 const baseQuery = `
   SELECT 
     c.complain_id,
+    c.complaint_ref,
+    c.title,
     c.complain_msg,
     c.img_url,
     c.status,
+    c.priority,
+    c.category,
+    c.province,
+    c.district,
+    c.municipality,
+    c.ward,
     c.created_at,
-
-    COALESCE(SUM(CASE WHEN v.vote_type = 1 THEN 1 ELSE 0 END), 0) AS upvotes,
-    COALESCE(SUM(CASE WHEN v.vote_type = -1 THEN 1 ELSE 0 END), 0) AS downvotes,
-
-    COALESCE(STRING_AGG(DISTINCT m.ministry_name, ', '), '') AS ministries,
-    COALESCE(STRING_AGG(DISTINCT d.department_name, ', '), '') AS departments
+    c.upvote_count,
+    c.downvote_count,
+    c.view_count,
+    u.full_name AS user_name,
+    
+    COALESCE(
+      (SELECT json_agg(DISTINCT m.ministry_name)
+       FROM complaint_ministries cm
+       JOIN ministries m ON cm.ministry_id = m.ministry_id
+       WHERE cm.complain_id = c.complain_id), '[]'
+    ) AS ministries,
+    
+    COALESCE(
+      (SELECT json_agg(DISTINCT d.department_name)
+       FROM complaint_departments cd
+       JOIN departments d ON cd.department_id = d.department_id
+       WHERE cd.complain_id = c.complain_id), '[]'
+    ) AS departments
 
   FROM complaints c
+  LEFT JOIN users u ON c.user_id = u.user_id
+`;
 
-  LEFT JOIN votes v ON c.complain_id = v.complain_id
-  LEFT JOIN complaint_ministries cm ON c.complain_id = cm.complain_id
-  LEFT JOIN ministries m ON cm.ministry_id = m.ministry_id
-  LEFT JOIN complaint_departments cd ON c.complain_id = cd.complain_id
-  LEFT JOIN departments d ON cd.department_id = d.department_id
-
-  GROUP BY c.complain_id
-`
-
-router.get("/highest-upvote", async (req, res) => {
+// =====================================================
+// GET /api/dashboard/highest-upvote
+// Returns complaints sorted by upvotes (most popular)
+// =====================================================
+router.get('/highest-upvote', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 20;
     const offset = parseInt(req.query.offset) || 0;
+    const status = req.query.status; // Optional status filter
 
-    const result = await pool.query(
-      `
-      ${baseQuery}
-      ORDER BY upvotes DESC, c.created_at DESC
-      LIMIT $1 OFFSET $2
-      `,
-      [limit, offset]
-    );
+    let query = baseQuery;
+    const params = [];
+    let paramIndex = 1;
 
-    res.json(result.rows);
+    // Add status filter if provided
+    if (status) {
+      query += ` WHERE c.status = $${paramIndex}`;
+      params.push(status);
+      paramIndex++;
+    }
+
+    // Add sorting and pagination
+    query += `
+      ORDER BY c.upvote_count DESC, c.created_at DESC
+      LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
+    `;
+    params.push(limit, offset);
+
+    const result = await db.query(query, params);
+
+    // Get total count for pagination
+    let countQuery = 'SELECT COUNT(*) as total FROM complaints c';
+    if (status) {
+      countQuery += ' WHERE c.status = $1';
+      const countResult = await db.query(countQuery, [status]);
+      
+      res.json({
+        success: true,
+        count: result.rows.length,
+        total: parseInt(countResult.rows[0].total),
+        page: Math.floor(offset / limit) + 1,
+        totalPages: Math.ceil(parseInt(countResult.rows[0].total) / limit),
+        data: result.rows
+      });
+    } else {
+      const countResult = await db.query(countQuery);
+      
+      res.json({
+        success: true,
+        count: result.rows.length,
+        total: parseInt(countResult.rows[0].total),
+        page: Math.floor(offset / limit) + 1,
+        totalPages: Math.ceil(parseInt(countResult.rows[0].total) / limit),
+        data: result.rows
+      });
+    }
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+    console.error('Highest upvote error:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Server error'
+    });
   }
 });
 
-router.get("/newest-first", async (req, res) => {
+// =====================================================
+// GET /api/dashboard/newest-first
+// Returns complaints sorted by creation date (newest first)
+// =====================================================
+router.get('/newest-first', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 20;
     const offset = parseInt(req.query.offset) || 0;
+    const status = req.query.status; // Optional status filter
 
-    const result = await pool.query(
-      `
-      ${baseQuery}
+    let query = baseQuery;
+    const params = [];
+    let paramIndex = 1;
+
+    // Add status filter if provided
+    if (status) {
+      query += ` WHERE c.status = $${paramIndex}`;
+      params.push(status);
+      paramIndex++;
+    }
+
+    // Add sorting and pagination
+    query += `
       ORDER BY c.created_at DESC
-      LIMIT $1 OFFSET $2
-      `,
-      [limit, offset]
-    );
+      LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
+    `;
+    params.push(limit, offset);
 
-    res.json(result.rows);
+    const result = await db.query(query, params);
+
+    // Get total count for pagination
+    let countQuery = 'SELECT COUNT(*) as total FROM complaints c';
+    if (status) {
+      countQuery += ' WHERE c.status = $1';
+      const countResult = await db.query(countQuery, [status]);
+      
+      res.json({
+        success: true,
+        count: result.rows.length,
+        total: parseInt(countResult.rows[0].total),
+        page: Math.floor(offset / limit) + 1,
+        totalPages: Math.ceil(parseInt(countResult.rows[0].total) / limit),
+        data: result.rows
+      });
+    } else {
+      const countResult = await db.query(countQuery);
+      
+      res.json({
+        success: true,
+        count: result.rows.length,
+        total: parseInt(countResult.rows[0].total),
+        page: Math.floor(offset / limit) + 1,
+        totalPages: Math.ceil(parseInt(countResult.rows[0].total) / limit),
+        data: result.rows
+      });
+    }
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+    console.error('Newest first error:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Server error'
+    });
+  }
+});
+
+// =====================================================
+// GET /api/dashboard/by-category/:category
+// Returns complaints filtered by category
+// =====================================================
+router.get('/by-category/:category', async (req, res) => {
+  try {
+    const category = req.params.category;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = parseInt(req.query.offset) || 0;
+
+    const query = `
+      ${baseQuery}
+      WHERE c.category = $1
+      ORDER BY c.upvote_count DESC, c.created_at DESC
+      LIMIT $2 OFFSET $3
+    `;
+
+    const result = await db.query(query, [category, limit, offset]);
+
+    // Get total count
+    const countResult = await db.query(
+      'SELECT COUNT(*) as total FROM complaints WHERE category = $1',
+      [category]
+    );
+
+    res.json({
+      success: true,
+      category: category,
+      count: result.rows.length,
+      total: parseInt(countResult.rows[0].total),
+      page: Math.floor(offset / limit) + 1,
+      totalPages: Math.ceil(parseInt(countResult.rows[0].total) / limit),
+      data: result.rows
+    });
+
+  } catch (err) {
+    console.error('By category error:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Server error'
+    });
+  }
+});
+
+// =====================================================
+// GET /api/dashboard/by-location
+// Returns complaints filtered by location
+// =====================================================
+router.get('/by-location', async (req, res) => {
+  try {
+    const { province, district, municipality, ward } = req.query;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = parseInt(req.query.offset) || 0;
+
+    let query = baseQuery + ' WHERE 1=1';
+    const params = [];
+    let paramIndex = 1;
+
+    if (province) {
+      query += ` AND c.province = $${paramIndex}`;
+      params.push(province);
+      paramIndex++;
+    }
+    if (district) {
+      query += ` AND c.district = $${paramIndex}`;
+      params.push(district);
+      paramIndex++;
+    }
+    if (municipality) {
+      query += ` AND c.municipality = $${paramIndex}`;
+      params.push(municipality);
+      paramIndex++;
+    }
+    if (ward) {
+      query += ` AND c.ward = $${paramIndex}`;
+      params.push(ward);
+      paramIndex++;
+    }
+
+    query += `
+      ORDER BY c.created_at DESC
+      LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
+    `;
+    params.push(limit, offset);
+
+    const result = await db.query(query, params);
+
+    // Get total count with same filters
+    let countQuery = 'SELECT COUNT(*) as total FROM complaints c WHERE 1=1';
+    const countParams = [];
+    let countIndex = 1;
+
+    if (province) {
+      countQuery += ` AND c.province = $${countIndex}`;
+      countParams.push(province);
+      countIndex++;
+    }
+    if (district) {
+      countQuery += ` AND c.district = $${countIndex}`;
+      countParams.push(district);
+      countIndex++;
+    }
+    if (municipality) {
+      countQuery += ` AND c.municipality = $${countIndex}`;
+      countParams.push(municipality);
+      countIndex++;
+    }
+    if (ward) {
+      countQuery += ` AND c.ward = $${countIndex}`;
+      countParams.push(ward);
+      countIndex++;
+    }
+
+    const countResult = await db.query(countQuery, countParams);
+
+    res.json({
+      success: true,
+      location: { province, district, municipality, ward },
+      count: result.rows.length,
+      total: parseInt(countResult.rows[0].total),
+      page: Math.floor(offset / limit) + 1,
+      totalPages: Math.ceil(parseInt(countResult.rows[0].total) / limit),
+      data: result.rows
+    });
+
+  } catch (err) {
+    console.error('By location error:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Server error'
+    });
+  }
+});
+
+// =====================================================
+// GET /api/dashboard/stats
+// Returns dashboard statistics
+// =====================================================
+router.get('/stats', async (req, res) => {
+  try {
+    // Get overall stats
+    const statsResult = await db.query(`
+      SELECT 
+        COUNT(*) as total_complaints,
+        COUNT(*) FILTER (WHERE status = 'resolved') as resolved,
+        COUNT(*) FILTER (WHERE status = 'in-progress') as in_progress,
+        COUNT(*) FILTER (WHERE status IN ('registered', 'pending')) as pending,
+        SUM(upvote_count) as total_upvotes,
+        SUM(downvote_count) as total_downvotes,
+        SUM(view_count) as total_views
+      FROM complaints
+    `);
+
+    // Category breakdown
+    const categoryResult = await db.query(`
+      SELECT 
+        category,
+        COUNT(*) as count
+      FROM complaints
+      WHERE category IS NOT NULL
+      GROUP BY category
+      ORDER BY count DESC
+      LIMIT 10
+    `);
+
+    // Priority breakdown
+    const priorityResult = await db.query(`
+      SELECT 
+        priority,
+        COUNT(*) as count
+      FROM complaints
+      GROUP BY priority
+    `);
+
+    // Recent activity (last 24 hours)
+    const recentResult = await db.query(`
+      SELECT COUNT(*) as recent_count
+      FROM complaints
+      WHERE created_at > NOW() - INTERVAL '24 hours'
+    `);
+
+    res.json({
+      success: true,
+      data: {
+        overall: statsResult.rows[0],
+        byCategory: categoryResult.rows,
+        byPriority: priorityResult.rows,
+        recentActivity: recentResult.rows[0]
+      }
+    });
+
+  } catch (err) {
+    console.error('Dashboard stats error:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Server error'
+    });
   }
 });
 
