@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gunaso - Submit Complaint</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 600px;
+        width: 100%;
+        padding: 40px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        color: #667eea;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        color: #666;
+        font-size: 1.1em;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 600;
+        font-size: 0.95em;
+      }
+
+      input[type="text"],
+      textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1em;
+        transition: all 0.3s;
+        font-family: inherit;
+      }
+
+      input[type="text"]:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 150px;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+      }
+
+      .submit-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .loading.active {
+        display: block;
+      }
+
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .result {
+        display: none;
+        margin-top: 30px;
+        padding: 25px;
+        border-radius: 15px;
+        background: #f8f9fa;
+      }
+
+      .result.active {
+        display: block;
+      }
+
+      .result.success {
+        background: #d4edda;
+        border: 2px solid #c3e6cb;
+      }
+
+      .result.error {
+        background: #f8d7da;
+        border: 2px solid #f5c6cb;
+      }
+
+      .result h3 {
+        margin-bottom: 15px;
+        color: #155724;
+      }
+
+      .result.error h3 {
+        color: #721c24;
+      }
+
+      .result-item {
+        margin: 10px 0;
+        padding: 10px;
+        background: white;
+        border-radius: 8px;
+      }
+
+      .result-item strong {
+        color: #667eea;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 5px 12px;
+        margin: 5px 5px 5px 0;
+        background: #667eea;
+        color: white;
+        border-radius: 20px;
+        font-size: 0.9em;
+      }
+
+      .new-complaint-btn {
+        margin-top: 15px;
+        padding: 10px 20px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1em;
+      }
+
+      .new-complaint-btn:hover {
+        background: #5568d3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🗣️ Gunaso</h1>
+        <p>Submit your complaint and we'll route it automatically</p>
+      </div>
+
+      <form id="complaintForm">
+        <div class="form-group">
+          <label for="userId">User ID</label>
+          <input
+            type="text"
+            id="userId"
+            name="userId"
+            placeholder="Enter your user ID"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="title">Complaint Title</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="Brief title of your complaint"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="complaint">Complaint Details</label>
+          <textarea
+            id="complaint"
+            name="complaint"
+            placeholder="Describe your complaint in detail..."
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          Submit Complaint
+        </button>
+      </form>
+
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="margin-top: 15px; color: #666">Analyzing your complaint...</p>
+      </div>
+
+      <div class="result" id="result">
+        <h3 id="resultTitle">✅ Complaint Submitted Successfully!</h3>
+        <div class="result-item">
+          <strong>Reference Number:</strong> <span id="refNumber"></span>
+        </div>
+        <div class="result-item">
+          <strong>Assigned Ministries:</strong><br />
+          <div id="ministries"></div>
+        </div>
+        <div class="result-item">
+          <strong>Assigned Departments:</strong><br />
+          <div id="departments"></div>
+        </div>
+        <div class="result-item">
+          <strong>Confidence Score:</strong> <span id="confidence"></span>%
+        </div>
+        <button class="new-complaint-btn" onclick="resetForm()">
+          Submit Another Complaint
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("complaintForm");
+      const loading = document.getElementById("loading");
+      const result = document.getElementById("result");
+      const submitBtn = document.getElementById("submitBtn");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Get form data
+        const userId = document.getElementById("userId").value;
+        const title = document.getElementById("title").value;
+        const complaint = document.getElementById("complaint").value;
+
+        // Show loading state
+        submitBtn.disabled = true;
+        loading.classList.add("active");
+        result.classList.remove("active");
+
+        try {
+          // Make API request
+          const response = await fetch("http://localhost:5095/submit", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user_id: userId,
+              title: title,
+              complaint: complaint,
+            }),
+          });
+
+          const data = await response.json();
+
+          // Hide loading
+          loading.classList.remove("active");
+
+          if (response.ok) {
+            // Show success result
+            result.classList.add("active", "success");
+            result.classList.remove("error");
+
+            document.getElementById("resultTitle").textContent =
+              "✅ Complaint Submitted Successfully!";
+            document.getElementById("refNumber").textContent =
+              data.complaint_ref;
+
+            // Display ministries
+            const ministriesDiv = document.getElementById("ministries");
+            ministriesDiv.innerHTML = data.ministries
+              .map((m) => `<span class="badge">${m}</span>`)
+              .join("");
+
+            // Display departments
+            const departmentsDiv = document.getElementById("departments");
+            departmentsDiv.innerHTML = data.departments
+              .map((d) => `<span class="badge">${d}</span>`)
+              .join("");
+
+            document.getElementById("confidence").textContent = data.confidence;
+          } else {
+            // Show error
+            result.classList.add("active", "error");
+            result.classList.remove("success");
+            document.getElementById("resultTitle").textContent =
+              "❌ Error: " + (data.error || "Failed to submit complaint");
+            submitBtn.disabled = false;
+          }
+        } catch (error) {
+          // Handle network errors
+          loading.classList.remove("active");
+          result.classList.add("active", "error");
+          result.classList.remove("success");
+          document.getElementById("resultTitle").textContent =
+            "❌ Network Error: Could not connect to server";
+          submitBtn.disabled = false;
+        }
+      });
+
+      function resetForm() {
+        form.reset();
+        result.classList.remove("active");
+        submitBtn.disabled = false;
+      }
+    </script>
+  </body>
+</html>
