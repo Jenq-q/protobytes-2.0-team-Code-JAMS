@@ -14,7 +14,7 @@ Samridhi Maharjan - samridhi.maharjan111@gmail.com - samridhi-maharjan <br>
 **Problem Statement**<br>
 Existing E‑government grievance redressal systems does manual classification of complaints which results in misrouting and delays. Absence of analytical tools limits insight into recurring issues and departmental performance, lack of automated prioritization causes urgent grievances to be overlooked, duplicate complaints increase system workload and inefficiency, and limited transparency reduces citizen trust in grievance resolution processes.<br>
 
-**Solution Overview**
+**Solution Overview**<br>
 An AI-powered grievance management system that automatically classifies and routes complaints to the appropriate departments while predicting their urgency and priority to ensure timely resolution and effective escalation.<br>
 
 **Technical Stack**<br> 
